@@ -1,9 +1,10 @@
 import secrets
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Cookie, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.dependencias import usuario_logado
 from app.models import SessaoLogin, Usuario
 from app.schemas import UsuarioCadastro, UsuarioLogin, UsuarioResposta
 from app.seguranca import gerar_hash, verificar_senha
@@ -27,6 +28,7 @@ def cadastrar(dados: UsuarioCadastro, db: Session = Depends(get_db)):
     db.refresh(novo)
     return novo
 
+
 @router.post("/login", response_model=UsuarioResposta)
 def login(dados: UsuarioLogin, response: Response, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.nome == dados.nome).first()
@@ -45,3 +47,19 @@ def login(dados: UsuarioLogin, response: Response, db: Session = Depends(get_db)
         max_age=60 * 60 * 24 * 7,
     )
     return usuario
+
+
+@router.get("/eu", response_model=UsuarioResposta)
+def eu(usuario: Usuario = Depends(usuario_logado)):
+    return usuario
+
+@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
+def logout(
+    response: Response,
+    token: str | None = Cookie(default=None),
+    db: Session = Depends(get_db),
+):
+    if token:
+        db.query(SessaoLogin).filter(SessaoLogin.token == token).delete()
+        db.commit()
+    response.delete_cookie(key="token", httponly=True, samesite="lax")
