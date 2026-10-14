@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+import secrets
+
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Usuario
-from app.schemas import UsuarioCadastro, UsuarioResposta
-from app.seguranca import gerar_hash
+from app.models import SessaoLogin, Usuario
+from app.schemas import UsuarioCadastro, UsuarioLogin, UsuarioResposta
+from app.seguranca import gerar_hash, verificar_senha
 
 router = APIRouter(prefix="/api", tags=["auth"])
 
@@ -24,3 +26,22 @@ def cadastrar(dados: UsuarioCadastro, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(novo)
     return novo
+
+@router.post("/login", response_model=UsuarioResposta)
+def login(dados: UsuarioLogin, response: Response, db: Session = Depends(get_db)):
+    usuario = db.query(Usuario).filter(Usuario.nome == dados.nome).first()
+    if not usuario or not verificar_senha(dados.senha, usuario.senha_hash):
+        raise HTTPException(status_code=401, detail="Nome ou senha incorretos")
+
+    token = secrets.token_urlsafe(32)
+    db.add(SessaoLogin(token=token, usuario_id=usuario.id))
+    db.commit()
+
+    response.set_cookie(
+        key="token",
+        value=token,
+        httponly=True,
+        samesite="lax",
+        max_age=60 * 60 * 24 * 7,
+    )
+    return usuario

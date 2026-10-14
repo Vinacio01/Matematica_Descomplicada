@@ -18,3 +18,7 @@ class UsuarioResposta(BaseModel):
     nome: str
 
     model_config = {"from_attributes": True}
+
+class UsuarioLogin(BaseModel):
+    nome: str
+    senha: str
