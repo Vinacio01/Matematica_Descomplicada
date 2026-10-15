@@ -13,18 +13,15 @@ class UsuarioCadastro(BaseModel):
 
         return valor
 
-
 class UsuarioResposta(BaseModel):
     id: int
     nome: str
 
     model_config = {"from_attributes": True}
 
-
 class UsuarioLogin(BaseModel):
     nome: str
     senha: str
-
 
 class QuestaoResposta(BaseModel):
     id: int
@@ -33,7 +30,16 @@ class QuestaoResposta(BaseModel):
 
     model_config = {"from_attributes": True}
 
-
 class ResponderQuestao(BaseModel):
     questao_id: int = Field(gt=0)
     resposta: int
+
+class ResultadoResposta(BaseModel):
+    correta: bool
+    mensagem: str
+
+class ProgressoResposta(BaseModel):
+    acertos: int
+    erros: int
+    sequencia_atual: int
+    recorde: int
