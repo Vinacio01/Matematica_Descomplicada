@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field, field_validator
+from datetime import datetime
 
 
 class UsuarioCadastro(BaseModel):
@@ -13,15 +14,18 @@ class UsuarioCadastro(BaseModel):
 
         return valor
 
+
 class UsuarioResposta(BaseModel):
     id: int
     nome: str
 
     model_config = {"from_attributes": True}
 
+
 class UsuarioLogin(BaseModel):
     nome: str
     senha: str
+
 
 class QuestaoResposta(BaseModel):
     id: int
@@ -30,16 +34,33 @@ class QuestaoResposta(BaseModel):
 
     model_config = {"from_attributes": True}
 
+
 class ResponderQuestao(BaseModel):
     questao_id: int = Field(gt=0)
     resposta: int
 
+
+class ConquistaResposta(BaseModel):
+    codigo: str
+    nome: str
+
+
 class ResultadoResposta(BaseModel):
     correta: bool
     mensagem: str
+    conquista: ConquistaResposta | None = None
+
 
 class ProgressoResposta(BaseModel):
     acertos: int
     erros: int
     sequencia_atual: int
     recorde: int
+
+class ListaConquistaResposta(BaseModel):
+    id: int
+    codigo: str
+    nome: str
+    desbloqueada_em: datetime
+
+    model_config = {"from_attributes": True}

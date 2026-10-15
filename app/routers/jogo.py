@@ -1,12 +1,20 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from typing import List
 
+from app.conquistas import obter_conquista_da_sequencia
 from app.database import get_db
 from app.dependencias import usuario_logado
 from app.jogo import gerar_conta, sortear_operacao
-from app.models import Progresso, Questao, Usuario
-from app.schemas import (QuestaoResposta, ResponderQuestao, ResultadoResposta, ProgressoResposta,)
-
+from app.models import Conquista, Progresso, Questao, Usuario
+from app.schemas import (
+    ConquistaResposta,
+    ListaConquistaResposta,
+    ProgressoResposta,
+    QuestaoResposta,
+    ResponderQuestao,
+    ResultadoResposta,
+)
 
 router = APIRouter(prefix="/api", tags=["jogo"])
 
@@ -69,8 +77,17 @@ def responder_questao(
     )
 
     if not progresso:
-        progresso = Progresso(usuario_id=usuario.id,)
+        progresso = Progresso(
+            usuario_id=usuario.id,
+            acertos=0,
+            erros=0,
+            sequencia_atual=0,
+            recorde=0,
+        )
         db.add(progresso)
+        db.flush()
+
+    conquista_nova = None
 
     if acertou:
         progresso.acertos += 1
@@ -78,6 +95,29 @@ def responder_questao(
 
         if progresso.sequencia_atual > progresso.recorde:
             progresso.recorde = progresso.sequencia_atual
+
+        configuracao = obter_conquista_da_sequencia(
+            progresso.sequencia_atual
+        )
+
+        if configuracao:
+            conquista_existente = (
+                db.query(Conquista)
+                .filter(
+                    Conquista.usuario_id == usuario.id,
+                    Conquista.codigo == configuracao["codigo"],
+                )
+                .first()
+            )
+
+            if not conquista_existente:
+                conquista_nova = Conquista(
+                    usuario_id=usuario.id,
+                    codigo=configuracao["codigo"],
+                    nome=configuracao["nome"],
+                )
+                db.add(conquista_nova)
+
     else:
         progresso.erros += 1
         progresso.sequencia_atual = 0
@@ -86,10 +126,27 @@ def responder_questao(
 
     db.commit()
 
-    if acertou:
-        return ResultadoResposta(correta=True, mensagem="Resposta correta!",)
+    conquista_resposta = None
 
-    return ResultadoResposta(correta=False, mensagem="Resposta incorreta.", )
+    if conquista_nova:
+        conquista_resposta = ConquistaResposta(
+            codigo=conquista_nova.codigo,
+            nome=conquista_nova.nome,
+        )
+
+    if acertou:
+        return ResultadoResposta(
+            correta=True,
+            mensagem="Resposta correta!",
+            conquista=conquista_resposta,
+        )
+
+    return ResultadoResposta(
+        correta=False,
+        mensagem="Resposta incorreta.",
+        conquista=None,
+    )
+
 
 @router.get("/progresso", response_model=ProgressoResposta)
 def obter_progresso(
@@ -121,3 +178,20 @@ def obter_progresso(
         sequencia_atual=progresso.sequencia_atual,
         recorde=progresso.recorde,
     )
+
+@router.get(
+    "/conquistas",
+    response_model=list[ListaConquistaResposta],
+)
+def listar_conquistas(
+    usuario: Usuario = Depends(usuario_logado),
+    db: Session = Depends(get_db),
+):
+    conquistas = (
+        db.query(Conquista)
+        .filter(Conquista.usuario_id == usuario.id)
+        .order_by(Conquista.id)
+        .all()
+    )
+
+    return conquistas
