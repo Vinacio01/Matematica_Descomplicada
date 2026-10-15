@@ -10,6 +10,7 @@ class UsuarioCadastro(BaseModel):
     def senha_nao_pode_passar_de_72_bytes(cls, valor: str) -> str:
         if len(valor.encode("utf-8")) > 72:
             raise ValueError("A senha é longa demais")
+
         return valor
 
 
@@ -19,6 +20,20 @@ class UsuarioResposta(BaseModel):
 
     model_config = {"from_attributes": True}
 
+
 class UsuarioLogin(BaseModel):
     nome: str
     senha: str
+
+
+class QuestaoResposta(BaseModel):
+    id: int
+    enunciado: str
+    operacao: str
+
+    model_config = {"from_attributes": True}
+
+
+class ResponderQuestao(BaseModel):
+    questao_id: int = Field(gt=0)
+    resposta: int
