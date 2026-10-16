@@ -1,0 +1,68 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFB928">
+  <title>Entrar na aventura — Matemática Descomplicada</title>
+  <link rel="stylesheet" href="welcome.css">
+  <link rel="stylesheet" href="access.css">
+  <script src="access.js" defer></script>
+</head>
+<body>
+<main class="world access-world" aria-labelledby="title">
+  <div class="scenery" aria-hidden="true">
+    <i class="sun"></i><i class="cloud c1"></i><i class="cloud c2"></i>
+    <span class="s1">✦</span><span class="s2">✦</span><span class="n3">3</span><span class="n7">7</span><span class="plus">+</span><span class="equals">=</span><i class="hill h1"></i><i class="hill h2"></i>
+  </div>
+  <div class="stage access-stage">
+    <div class="badge">✦ Matemática Descomplicada ✦</div>
+    <section class="panel access-panel" aria-label="Acesso à aventura">
+      <div class="doodles" aria-hidden="true"><span>△</span><span>✦</span><span>○</span></div>
+      <div class="access-content">
+        <p class="intro">Seus amigos estão esperando!</p>
+        <h1 id="title">Vamos <span>nessa?</span></h1>
+        <p class="subtitle" id="subtitle">Entre para continuar sua aventura.</p>
+        <div class="mode-switch" role="group" aria-label="Escolha como acessar">
+          <button type="button" data-mode="login" aria-pressed="true">Entrar</button>
+          <button type="button" data-mode="signup" aria-pressed="false">Criar conta</button>
+        </div>
+        <form novalidate aria-label="Entrar" id="access-form">
+          <div class="field">
+            <label for="name">Seu nome</label>
+            <input id="name" type="text" autocomplete="username" placeholder="Como você se chama?" maxlength="60" required aria-describedby="name-error">
+            <p class="field-error" id="name-error" hidden></p>
+          </div>
+          <div class="field">
+            <label for="password">Sua senha</label>
+            <div class="password-wrap">
+              <input id="password" type="password" autocomplete="current-password" placeholder="Digite sua senha" required aria-describedby="password-help password-error">
+              <button class="reveal" type="button" aria-label="Mostrar senha" aria-pressed="false" aria-controls="password">Mostrar</button>
+            </div>
+            <p class="field-help" id="password-help" hidden>Use pelo menos 6 caracteres.</p>
+            <p class="field-error" id="password-error" hidden></p>
+          </div>
+          <div class="field" id="confirm-field" hidden>
+            <label for="confirm">Repita sua senha</label>
+            <div class="password-wrap">
+              <input id="confirm" type="password" autocomplete="new-password" placeholder="Mais uma vez!" disabled aria-describedby="confirm-error">
+              <button class="reveal" type="button" aria-label="Mostrar confirmação de senha" aria-pressed="false" aria-controls="confirm">Mostrar</button>
+            </div>
+            <p class="field-error" id="confirm-error" hidden></p>
+          </div>
+          <button class="start submit" type="submit"><span id="submit-label">Entrar na aventura</span><span aria-hidden="true">➜</span></button>
+          <p class="feedback" role="status" aria-live="polite" hidden></p>
+        </form>
+        <p class="switch-help"><span id="switch-prompt">É sua primeira aventura?</span> <button type="button" id="switch-link">Crie sua conta!</button></p>
+        <p class="encouragement">Cada descoberta começa com um pequeno passo.</p>
+        <noscript><p>Ative o JavaScript para alternar entre entrar e criar conta.</p></noscript>
+      </div>
+      <img class="mascot turquoise" src="assets/mascot-turquoise.svg" alt="Nosso amigo turquesa acena para receber você." width="340" height="400">
+      <img class="mascot coral" src="assets/mascot-coral.svg" alt="Nosso amigo coral trouxe uma estrela para sua aventura." width="320" height="370">
+      <div class="tile two" aria-hidden="true">2</div><div class="tile add" aria-hidden="true">+</div><div class="tile four" aria-hidden="true">4</div>
+    </section>
+    <p class="caption">✦ Juntos, aprender fica ainda mais divertido! ✦</p>
+  </div>
+</main>
+</body>
+</html>
