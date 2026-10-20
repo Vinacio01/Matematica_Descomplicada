@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 400" fill="none">
+<title>Mascote turquesa mostrando um lápis para começar</title>
+<ellipse cx="170" cy="380" rx="111" ry="14" fill="#321557" opacity=".18"/>
+<path d="M83 197c-48-14-60 34-47 87l38 11 28-74" fill="#E7A539" stroke="#CA8129" stroke-width="7"/>
+<path d="M113 326c-9 18-26 22-37 29-15 9-9 22 9 24l48 1c14-2 19-18 19-45M205 332c8 17 27 22 39 15 16-9 30-3 32 9 2 14-20 20-48 16-28-3-49-16-57-32" fill="#23ABA8"/>
+<path d="M68 220c-25-7-48 8-57 34-6 17-1 31 12 34 11 2 13-11 19-20l29-5M249 221c26 7 43-8 59-35l14-20c8-10 18-5 16 6-1 8-7 14-15 20-17 43-38 70-72 69" fill="#2BC9C5"/>
+<path d="M63 206c-1-78 31-127 103-127 77 0 110 58 109 132l-4 67c-2 54-39 78-102 78-65 0-102-24-105-73Z" fill="#2BC9C5"/>
+<path d="M77 167c9-45 37-66 73-69" stroke="#8BECE1" stroke-width="12" stroke-linecap="round"/>
+<path d="M72 283c24 52 146 63 198-9-1 57-34 82-102 82-58 0-91-21-96-73" fill="#22B5B4"/>
+<ellipse cx="174" cy="294" rx="55" ry="36" fill="#84E5D2"/>
+<path d="M131 86c-5-23 6-43 22-45 9 8 11 19 10 32 10-19 25-22 37-15-1 17-16 28-29 31" fill="#2BC9C5"/>
+<ellipse cx="128" cy="188" rx="33" ry="42" fill="#FFF5DB"/><ellipse cx="211" cy="185" rx="34" ry="43" fill="#FFF5DB"/>
+<ellipse cx="148" cy="193" rx="15" ry="23" fill="#30204D"/><ellipse cx="228" cy="190" rx="15" ry="23" fill="#30204D"/><circle cx="153" cy="184" r="6" fill="white"/><circle cx="233" cy="181" r="6" fill="white"/>
+<path d="M108 132q16-12 31-5M194 124q18-10 33 5" stroke="#238D95" stroke-width="8" stroke-linecap="round"/>
+<ellipse cx="101" cy="233" rx="18" ry="10" fill="#FF9685"/><ellipse cx="240" cy="229" rx="17" ry="10" fill="#FF9685"/>
+<path d="M145 232q28 13 55-7c-1 42-47 50-55 7" fill="#392352"/><path d="M157 255q18-11 32-2c-10 13-24 13-32 2" fill="#FF817E"/>
+<path d="m79 270 44-22 1 41-39-6Z" fill="#FFB928"/><path d="m123 249 32 37-15 13-24-23" fill="#ED9D23"/><circle cx="120" cy="264" r="12" fill="#FFE18C"/>
+<path d="m292 172 29-79 13 5-29 79-15 16Z" fill="#FFB928" stroke="#E99424" stroke-width="3" stroke-linejoin="round"/>
+<path d="m321 93 4-13 13 5-4 13Z" fill="#FF705A"/><path d="m290 174 15 3-15 16Z" fill="#FFF5DB"/><path d="m290 193 5-7 2 5Z" fill="#392352"/>
+<path d="M298 177c-11-4-21-2-22 7-1 10 12 14 22 10" fill="#2BC9C5"/>
+</svg>

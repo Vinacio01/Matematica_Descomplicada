@@ -17,6 +17,7 @@ function setError(input, message) {
 function changeMode(nextMode) {
   mode = nextMode;
   const signup = mode === 'signup';
+  document.querySelector('.access-content').classList.toggle('signup-view', signup);
   modeButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.mode === mode)));
   document.querySelector('#title').innerHTML = signup ? 'Sua aventura <span>começa aqui!</span>' : 'Vamos <span>nessa?</span>';
   document.querySelector('#subtitle').textContent = signup ? 'Crie sua conta e venha descobrir com a gente.' : 'Entre para continuar sua aventura.';
@@ -69,8 +70,12 @@ form.addEventListener('submit', event => {
   setError(confirmation, mode !== 'signup' ? '' : !confirmation.value ? 'Repita sua senha aqui também.' : password.value !== confirmation.value ? 'As senhas estão diferentes. Vamos tentar de novo?' : '');
   const invalid = form.querySelector('[aria-invalid="true"]');
   if (invalid) { invalid.focus(); return; }
-  feedback.textContent = mode === 'signup'
-    ? 'Tudo preenchido! A criação de contas estará disponível em breve. Nenhuma conta foi criada ainda.'
-    : 'Tudo preenchido! A entrada na aventura estará disponível em breve.';
-  feedback.hidden = false;
+  password.value = '';
+  confirmation.value = '';
+  if (mode === 'signup') {
+    feedback.textContent = 'Em breve você poderá criar sua conta! Nenhuma conta foi criada nesta demonstração.';
+    feedback.hidden = false;
+    return;
+  }
+  window.location.href = 'dashboard.html';
 });

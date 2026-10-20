@@ -4,7 +4,10 @@ const celebration = document.querySelector('.celebration');
 let timer;
 button.addEventListener('click', () => {
   message.textContent = 'Oba! Nossa aventura está sendo preparada!';
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.location.href = 'access.html';
+    return;
+  }
   clearTimeout(timer);
   celebration.replaceChildren();
   const colors = ['#FFB928', '#2BC9C5', '#FF705A', '#52DB78', '#FFF5DB'];
@@ -19,4 +22,5 @@ button.addEventListener('click', () => {
     celebration.append(piece);
   }
   timer = setTimeout(() => celebration.replaceChildren(), 1100);
+  setTimeout(() => { window.location.href = 'access.html'; }, 650);
 });

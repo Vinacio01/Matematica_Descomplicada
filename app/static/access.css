@@ -1,34 +1,33 @@
 ﻿/* Extends the approved welcome screen without changing its shared styles. */
 [hidden] { display: none !important; }
-.access-world { padding-top: 48px; padding-bottom: 38px; }
-.access-stage { max-width: 1000px; min-width: 0; }
-.access-panel { padding: 45px 32px 30px; }
-.access-content { position: relative; z-index: 3; width: 100%; max-width: 450px; margin: auto; }
-.access-content h1 { font-size: 50px; margin-bottom: 10px; }
-.access-content .intro { margin: 0 0 8px; }
-.subtitle { font-size: 22px; line-height: 1.4; margin: 0 0 22px; }
-.mode-switch { display: flex; gap: 6px; padding: 6px; background: #321557; border: 2px solid #9867d0; border-radius: 23px; margin-bottom: 24px; }
-.mode-switch button { flex: 1; min-height: 52px; border: 0; border-radius: 16px; background: transparent; color: #FFF5DB; font: 900 20px 'Nunito', 'Trebuchet MS', sans-serif; cursor: pointer; transition: background .18s, transform .18s; }
-.mode-switch button[aria-pressed="true"] { background: #FFB928; color: #482080; box-shadow: 0 4px 0 #bd7b26; }
+.access-world { padding-top: 22px; padding-bottom: 18px; }
+.access-panel { display: flex; align-items: center; justify-content: center; min-height: var(--auth-panel-reference-height); padding: 22px 32px 14px; }
+.access-content { position: relative; z-index: 3; width: 100%; max-width: 640px; margin: auto; }
+.access-content h1 { font-size: 50px; margin-bottom: 6px; }
+.access-content .intro { margin: 0 0 5px; }
+.subtitle { font-size: 22px; line-height: 1.4; margin: 0 0 7px; }
+.mode-switch { display: flex; gap: 6px; padding: 5px; background: #321557; border: 2px solid #9867d0; border-radius: 23px; margin-bottom: var(--space-1); }
+.mode-switch button { flex: 1; min-height: 46px; border: 0; border-radius: 16px; background: transparent; color: var(--cream); font: 900 20px var(--font-body); cursor: pointer; transition: background .18s, transform .18s; }
+.mode-switch button[aria-pressed="true"] { background: var(--color-yellow); color: var(--purple); box-shadow: 0 4px 0 #bd7b26; }
 .mode-switch button:hover { background: #7447CE; }
 .mode-switch button[aria-pressed="true"]:hover { background: #ffce64; }
-.field { text-align: left; margin-bottom: 17px; }
+.field { text-align: left; margin-bottom: 7px; }
 .field label { display: block; font-size: 20px; font-weight: 900; margin: 0 0 7px 5px; }
-.field input { display: block; width: 100%; min-width: 0; min-height: 60px; padding: 13px 17px; border: 3px solid #c7a8e8; border-radius: 20px; background: #FFF5DB; color: #482080; font: 800 20px 'Nunito', 'Trebuchet MS', sans-serif; box-shadow: 0 5px 0 #32155766; transition: border-color .18s, box-shadow .18s; }
+.field input { display: block; width: 100%; min-width: 0; padding: 9px 17px; border: 3px solid #c7a8e8; background: var(--cream); color: var(--purple); font-weight: 800; font-family: var(--font-body); box-shadow: 0 5px 0 #32155766; transition: border-color .18s, box-shadow .18s; }
 .field input::placeholder { color: #756185; opacity: 1; font-weight: 700; }
 .field input:focus { border-color: #2BC9C5; outline: 3px solid #2BC9C559; outline-offset: 3px; box-shadow: 0 5px 0 #247d91; }
 .field input[aria-invalid="true"] { border-color: #FF9C88; outline-color: #FF705A77; }
 .password-wrap { position: relative; }
 .password-wrap input { padding-right: 105px; }
-.reveal { position: absolute; right: 8px; top: 8px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 13px; background: #eadcf6; color: #482080; font: 900 16px 'Nunito', sans-serif; cursor: pointer; }
+.reveal { position: absolute; right: 6px; top: 5px; min-height: 42px; padding: 0 10px; border: 0; border-radius: 13px; background: #eadcf6; color: #482080; font: 900 16px 'Nunito', sans-serif; cursor: pointer; }
 .reveal:hover { background: #d7bcec; }
 .field-help, .field-error { margin: 9px 5px 0; font-size: 16px; line-height: 1.4; }
 .field-error { color: #ffcfb9; font-weight: 900; }
 .field-help { color: #ebddfa; }
-.submit { width: 100%; margin-top: 6px; padding: 16px 15px; }
-.submit #submit-label { font-size: 22px; line-height: 1.3; }
+.submit { width: 100%; margin-top: 6px; padding: 13px 15px; }
+.submit #submit-label { font-size: var(--primary-button-font-size); line-height: 1.3; }
 .feedback { font-size: 18px; line-height: 1.5; background: #321557; border: 2px solid #52DB78; border-radius: 18px; padding: 14px; margin: 24px 0 0; }
-.switch-help { font-size: 18px; line-height: 1.7; margin: 26px 0 8px; }
+.switch-help { font-size: 18px; line-height: 1.7; margin: 5px 0 6px; }
 .switch-help button { border: 0; padding: 8px 5px; background: transparent; color: #ffcf52; font: 900 18px 'Nunito', sans-serif; text-decoration: underline; text-underline-offset: 5px; cursor: pointer; border-radius: 8px; }
 .switch-help button:hover { color: #FFF5DB; }
 .encouragement { font-size: 16px; line-height: 1.5; color: #ebddfa; margin: 0; }
@@ -41,11 +40,22 @@
 .access-panel .doodles span:nth-child(1) { left: 15%; top: 220px; }
 .access-panel .doodles span:nth-child(2) { right: 15%; top: 220px; }
 .access-panel .doodles span:nth-child(3) { display: none; }
-.access-world .caption { margin-top: 30px; }
+.access-world .caption { margin-top: 15px; }
+@media (min-width: 901px) {
+  .signup-view #access-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-2); }
+  .signup-view #access-form .field:first-child,
+  .signup-view #access-form .submit,
+  .signup-view #access-form .feedback { grid-column: 1 / -1; }
+  .signup-view .password-wrap input { padding-right: 85px; }
+  .signup-view .reveal { font-size: 16px; padding: 0 7px; }
+}
+@media (min-width: 901px) and (max-height: 740px) {
+  .access-world { padding-top: 12px; padding-bottom: 10px; }
+  .access-world .caption { display: none; }
+}
 @media (min-width: 1450px) { .access-panel .turquoise { left: -125px; } .access-panel .coral { right: -115px; } }
 @media (min-width: 701px) and (max-width: 1050px) {
   .access-world { padding-left: 48px; padding-right: 48px; }
-  .access-content { max-width: 380px; }
   .access-panel .turquoise { width: 190px; left: -72px; bottom: 80px; }
   .access-panel .coral { width: 180px; right: -68px; bottom: 80px; }
   .access-panel .two { left: 15px; top: 62px; }
@@ -53,14 +63,13 @@
 }
 @media (max-width: 700px) {
   .access-world { padding: 35px 15px 28px; }
-  .access-panel { padding: 42px 18px 205px; min-height: 0; }
+  .access-panel { display: block; padding: 42px 18px 205px; min-height: 0; }
   .access-content h1 { font-size: 42px; }
   .access-world .badge { font-size: 16px; padding: 12px 10px; }
   .subtitle { font-size: 20px; margin-bottom: 20px; }
   .mode-switch button { font-size: 18px; }
-  .field input { font-size: 18px; padding-left: 12px; }
+  .field input { padding-left: 12px; }
   .field label { font-size: 18px; }
-  .submit #submit-label { font-size: 20px; }
   .submit { gap: 10px; }
   .access-panel .turquoise { width: 185px; left: -20px; bottom: -4px; }
   .access-panel .coral { width: 173px; right: -17px; bottom: -4px; }

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#FFB928">
   <title>Entrar na aventura — Matemática Descomplicada</title>
+  <link rel="stylesheet" href="design-system.css">
   <link rel="stylesheet" href="welcome.css">
   <link rel="stylesheet" href="access.css">
   <script src="access.js" defer></script>
@@ -23,11 +24,11 @@
         <p class="intro">Seus amigos estão esperando!</p>
         <h1 id="title">Vamos <span>nessa?</span></h1>
         <p class="subtitle" id="subtitle">Entre para continuar sua aventura.</p>
-        <div class="mode-switch" role="group" aria-label="Escolha como acessar">
+        <div class="mode-switch ds-form-width" role="group" aria-label="Escolha como acessar">
           <button type="button" data-mode="login" aria-pressed="true">Entrar</button>
           <button type="button" data-mode="signup" aria-pressed="false">Criar conta</button>
         </div>
-        <form novalidate aria-label="Entrar" id="access-form">
+        <form class="ds-form-width" novalidate aria-label="Entrar" id="access-form">
           <div class="field">
             <label for="name">Seu nome</label>
             <input id="name" type="text" autocomplete="username" placeholder="Como você se chama?" maxlength="60" required aria-describedby="name-error">
@@ -54,11 +55,11 @@
           <p class="feedback" role="status" aria-live="polite" hidden></p>
         </form>
         <p class="switch-help"><span id="switch-prompt">É sua primeira aventura?</span> <button type="button" id="switch-link">Crie sua conta!</button></p>
-        <p class="encouragement">Cada descoberta começa com um pequeno passo.</p>
+        <p class="encouragement">Demonstração visual, sem autenticação real.</p>
         <noscript><p>Ative o JavaScript para alternar entre entrar e criar conta.</p></noscript>
       </div>
-      <img class="mascot turquoise" src="assets/mascot-turquoise.svg" alt="Nosso amigo turquesa acena para receber você." width="340" height="400">
-      <img class="mascot coral" src="assets/mascot-coral.svg" alt="Nosso amigo coral trouxe uma estrela para sua aventura." width="320" height="370">
+      <img class="mascot turquoise" src="assets/mascot-turquoise-access.svg" alt="Nosso amigo turquesa mostra um lápis para começar a aventura." width="340" height="400">
+      <img class="mascot coral" src="assets/mascot-coral-access.svg" alt="Nosso amigo coral aponta para a área de acesso e segura sua estrela." width="320" height="370">
       <div class="tile two" aria-hidden="true">2</div><div class="tile add" aria-hidden="true">+</div><div class="tile four" aria-hidden="true">4</div>
     </section>
     <p class="caption">✦ Juntos, aprender fica ainda mais divertido! ✦</p>
