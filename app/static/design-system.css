@@ -1,0 +1,68 @@
+:root {
+  color-scheme: light;
+  --purple: #482080;
+  --cream: #FFF5DB;
+  --color-yellow: #FFB928;
+  --color-teal: #2BC9C5;
+  --color-coral: #FF705A;
+  --color-green: #52DB78;
+  --color-card-teal: #209d9f;
+  --color-card-purple: #7447ce;
+  --color-card-coral: #e45d52;
+  --font-body: 'Nunito', 'Trebuchet MS', sans-serif;
+  --font-display: 'Baloo 2', 'Trebuchet MS', sans-serif;
+  --panel-max-width: 1050px;
+  --panel-reference-height: 520px;
+  --panel-reference-height-large: 570px;
+  --auth-panel-reference-height: 606px;
+  --dashboard-panel-ratio: .6;
+  --panel-radius: 80px 95px 85px 100px;
+  --panel-inner-radius: 65px 80px 70px 85px;
+  --panel-mobile-radius: 49px 57px 49px 57px;
+  --form-max-width: 520px;
+  --input-height: 54px;
+  --input-radius: 16px;
+  --input-font-size: 18px;
+  --primary-button-height: 60px;
+  --primary-button-radius: 25px;
+  --primary-button-font-size: 20px;
+  --page-gutter-desktop: 48px;
+  --page-gutter-mobile: 18px;
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+}
+
+.stage {
+  position: relative;
+  width: min(100%, var(--panel-max-width));
+  min-width: 0;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.panel {
+  min-height: var(--panel-reference-height);
+  border-radius: var(--panel-radius);
+}
+
+.ds-form-width {
+  width: min(100%, var(--form-max-width));
+  margin-inline: auto;
+}
+
+.field input {
+  min-height: var(--input-height);
+  border-radius: var(--input-radius);
+  font-size: var(--input-font-size);
+}
+
+.start {
+  min-height: var(--primary-button-height);
+  border-radius: var(--primary-button-radius);
+  font-size: var(--primary-button-font-size);
+}
+
+@media (max-width: 700px) {
+  .panel { border-radius: var(--panel-mobile-radius); }
+}

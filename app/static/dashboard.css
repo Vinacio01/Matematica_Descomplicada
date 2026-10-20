@@ -1,0 +1,87 @@
+/* The approved welcome styles supply the scenery, panel, type and button language. */
+.dashboard-world { display: grid; place-items: center; padding: 22px var(--page-gutter-desktop) 15px; }
+.dashboard-badge { margin-bottom: -22px; text-decoration: none; cursor: pointer; }
+.dashboard-badge:focus-visible { outline: 4px solid #482080; outline-offset: 5px; }
+.dashboard-panel { min-height: calc(var(--panel-reference-height) * var(--dashboard-panel-ratio)); padding: 36px 205px 22px; }
+.dashboard-copy { position: relative; z-index: 5; }
+.dashboard-copy .intro { margin: 0 0 4px; }
+.dashboard-copy h1 { font-size: clamp(43px, 4.3vw, 56px); margin-bottom: 6px; white-space: nowrap; }
+.dashboard-lead { margin: 0 0 12px; font-size: 22px; line-height: 1.35; font-weight: 800; }
+.play-now { min-width: 245px; }
+.dashboard-turquoise { width: 235px; height: auto; left: -62px; bottom: -36px; transform: rotate(-10deg); animation: bob-left 5s ease-in-out infinite; }
+.dashboard-coral { width: 220px; height: auto; right: -48px; bottom: -28px; transform: rotate(9deg); animation: bob-right 5s ease-in-out infinite .6s; }
+.dashboard-tile-one { top: 34px; left: 82px; background: #2BC9C5; color: #163f49; transform: rotate(-15deg); }
+.dashboard-tile-two { top: 29px; right: 92px; background: #FF705A; color: #4f2044; transform: rotate(12deg); }
+.dashboard-panel .doodles span:nth-child(1) { left: 26%; top: 30px; }
+.dashboard-panel .doodles span:nth-child(2) { right: 24%; top: 24px; }
+.dashboard-panel .doodles span:nth-child(3) { right: 18%; top: 178px; }
+.dashboard-world .scenery .math-symbol { position: absolute; font-family: var(--font-display); font-weight: 800; line-height: 1; color: #fff0ad; opacity: .43; pointer-events: none; }
+.math-symbol.minus { top: 41%; left: 3%; font-size: 86px; transform: rotate(-17deg); }
+.math-symbol.times { top: 28%; right: 3%; font-size: 89px; transform: rotate(14deg); }
+.math-symbol.divide { bottom: 14%; right: 9%; font-size: 76px; transform: rotate(-18deg); }
+.math-symbol.number { bottom: 19%; left: 7%; font-size: 85px; transform: rotate(18deg); }
+.math-symbol.star { top: 55%; right: 1%; font-size: 57px; }
+.dashboard-world .scenery .n3,.dashboard-world .scenery .n7 { opacity: .42; }
+.destinations { position: relative; z-index: 2; margin-top: 17px; }
+.destinations h2 { margin: 0 0 10px; color: var(--purple); font: 800 34px/1.2 var(--font-display); text-shadow: 0 2px 0 #fff2ae; }
+.card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 23px; }
+.destination-card { position: relative; display: flex; flex-direction: column; align-items: flex-start; min-height: 210px; width: 100%; padding: 15px 28px 18px; border: 5px solid #ffffff75; border-radius: 43px 50px 44px 51px; color: var(--cream); font-family: var(--font-body); text-align: left; cursor: pointer; box-shadow: 0 10px 0 #a85f3090, 0 17px 23px #a75f2226; transition: transform .18s, box-shadow .18s, filter .18s; }
+.destination-card:hover { transform: translateY(-6px) rotate(-1deg); box-shadow: 0 16px 0 #a85f3090, 0 22px 24px #a75f2235; filter: brightness(1.05); }
+.destination-card:active { transform: translateY(5px); box-shadow: 0 5px 0 #a85f3090; }
+.destination-card:focus-visible { outline: 4px solid #482080; outline-offset: 6px; }
+.card-play { background: var(--color-card-teal); }
+.card-progress { background: var(--color-card-purple); }
+.card-awards { background: var(--color-card-coral); }
+.card-icon { display: grid; place-items: center; width: 70px; height: 70px; margin-bottom: 5px; border-radius: 25px; background: #ffffff25; box-shadow: inset 0 0 0 2px #ffffff36; transform: rotate(-7deg); }
+.card-icon svg { width: 62px; height: 62px; }
+.card-title { font: 800 28px/1.12 var(--font-display); }
+.card-description { margin-top: 4px; padding-right: 22px; font-size: 18px; line-height: 1.25; font-weight: 800; }
+.card-arrow { position: absolute; right: 25px; bottom: 17px; font-size: 29px; line-height: 1; }
+.motivation { position: relative; z-index: 1; margin: 12px 0 0; color: #603222; font-size: 20px; line-height: 1.4; font-weight: 900; }
+@media (max-width: 1050px) {
+  .dashboard-panel { padding-right: 150px; padding-left: 150px; }
+  .dashboard-turquoise { width: 195px; left: -49px; }
+  .dashboard-coral { width: 180px; right: -39px; }
+  .dashboard-tile-one { left: 30px; }
+  .dashboard-tile-two { right: 35px; }
+  .dashboard-copy h1 { white-space: normal; }
+  .dashboard-lead { font-size: 20px; }
+  .destination-card { padding: 19px 21px 25px; }
+  .card-title { font-size: 26px; }
+}
+@media (max-width: 760px) {
+  .dashboard-world { display: block; padding: 38px var(--page-gutter-mobile) 52px; }
+  .dashboard-panel { min-height: 0; padding: 48px 25px 186px; border-width: 5px; border-radius: var(--panel-mobile-radius); }
+  .dashboard-panel:before { border-radius: 37px 45px 39px 45px; }
+  .dashboard-copy h1 { font-size: clamp(40px, 8vw, 48px); line-height: 1.08; }
+  .dashboard-lead { font-size: 20px; }
+  .play-now { min-width: 0; padding: 12px 22px; }
+  .dashboard-turquoise { width: 172px; left: -14px; bottom: -15px; }
+  .dashboard-coral { width: 160px; right: -12px; bottom: -14px; }
+  .dashboard-tile-one { top: auto; bottom: 104px; left: 45%; width: 48px; height: 51px; font-size: 36px; }
+  .dashboard-tile-two { top: auto; bottom: 44px; right: 43%; width: 43px; height: 46px; font-size: 32px; }
+  .dashboard-panel .doodles span:nth-child(1),.dashboard-panel .doodles span:nth-child(3) { display: none; }
+  .dashboard-panel .doodles span:nth-child(2) { top: auto; bottom: 153px; right: 27%; }
+  .destinations { margin-top: 38px; }
+  .destinations h2 { font-size: 32px; }
+  .card-grid { grid-template-columns: 1fr; max-width: 530px; margin: auto; gap: 20px; }
+  .destination-card { min-height: 167px; padding: 19px 22px 20px 122px; justify-content: center; border-radius: 37px 44px 39px 45px; }
+  .card-icon { position: absolute; left: 20px; top: 50%; width: 80px; height: 80px; margin: 0; transform: translateY(-50%) rotate(-7deg); }
+  .card-title { font-size: 28px; }
+  .card-description { font-size: 18px; padding-right: 14px; }
+  .card-arrow { right: 19px; bottom: 14px; }
+  .motivation { font-size: 18px; margin-top: 36px; }
+  .dashboard-world .scenery .math-symbol { opacity: .3; }
+}
+@media (max-width: 390px) {
+  .dashboard-badge { font-size: 16px; padding: 12px 10px; }
+  .dashboard-panel { padding-right: 15px; padding-left: 15px; }
+  .dashboard-copy h1 { font-size: 40px; }
+  .dashboard-turquoise { width: 155px; }
+  .dashboard-coral { width: 146px; }
+  .destination-card { padding-left: 105px; }
+  .card-icon { left: 13px; width: 72px; height: 72px; }
+  .card-icon svg { width: 64px; height: 64px; }
+  .card-title { font-size: 25px; }
+  .card-arrow { display: none; }
+}

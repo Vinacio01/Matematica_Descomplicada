@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFB928">
+  <title>Meu painel — Matemática Descomplicada</title>
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="welcome.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+<main class="world dashboard-world" aria-labelledby="dashboard-title">
+  <div class="scenery" aria-hidden="true">
+    <i class="sun"></i><i class="cloud c1"></i><i class="cloud c2"></i>
+    <span class="s1">✦</span><span class="s2">✦</span><span class="n3">3</span><span class="n7">7</span>
+    <span class="plus">+</span><span class="equals">=</span><span class="math-symbol minus">−</span>
+    <span class="math-symbol times">×</span><span class="math-symbol divide">÷</span>
+    <span class="math-symbol number">8</span><span class="math-symbol star">✦</span>
+    <i class="hill h1"></i><i class="hill h2"></i>
+  </div>
+
+  <div class="stage dashboard-stage">
+    <a class="badge dashboard-badge" href="index.html">✦ Voltar ao início ✦</a>
+    <section class="panel dashboard-panel" aria-labelledby="dashboard-title">
+      <div class="doodles" aria-hidden="true"><span>△</span><span>✦</span><span>○</span></div>
+      <div class="dashboard-copy">
+        <p class="intro">Seu cantinho de aventuras</p>
+        <h1 id="dashboard-title">Olá, <span>explorador!</span></h1>
+        <p class="dashboard-lead">Pronto para mais desafios?<br>Seu mundo matemático te espera!</p>
+        <button class="start play-now" type="button">
+          Jogar agora <span aria-hidden="true">➜</span>
+        </button>
+      </div>
+      <img class="mascot dashboard-turquoise" src="assets/mascot-turquoise-dashboard.svg" alt="Mascote turquesa salta e aponta para o botão de jogar." width="340" height="400">
+      <img class="mascot dashboard-coral" src="assets/mascot-coral-dashboard.svg" alt="Mascote coral celebra e aponta para os desafios com sua estrela erguida." width="320" height="370">
+      <div class="tile dashboard-tile-one" aria-hidden="true">2</div>
+      <div class="tile dashboard-tile-two" aria-hidden="true">+</div>
+    </section>
+
+    <section class="destinations" aria-label="Escolha sua aventura">
+      <h2>Para onde vamos hoje?</h2>
+      <div class="card-grid">
+        <button class="destination-card card-play" type="button">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 100 100" fill="none"><path d="M27 20h46a10 10 0 0 1 10 10v40a10 10 0 0 1-10 10H27a10 10 0 0 1-10-10V30a10 10 0 0 1 10-10Z" fill="#FFF5DB"/><path d="M34 41v20M24 51h20" stroke="#2A7776" stroke-width="8" stroke-linecap="round"/><circle cx="65" cy="43" r="6" fill="#FF705A"/><circle cx="73" cy="58" r="6" fill="#FFB928"/><path d="M32 20v-8m36 8v-8" stroke="#FFF5DB" stroke-width="7" stroke-linecap="round"/></svg>
+          </span>
+          <span class="card-title">Jogar</span>
+          <span class="card-description">Desafios cheios de diversão!</span>
+          <span class="card-arrow" aria-hidden="true">➜</span>
+        </button>
+        <button class="destination-card card-progress" type="button">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 100 100" fill="none"><path d="M18 76h64" stroke="#FFF5DB" stroke-width="7" stroke-linecap="round"/><rect x="24" y="52" width="13" height="24" rx="6" fill="#FFF5DB"/><rect x="44" y="38" width="13" height="38" rx="6" fill="#FFF5DB"/><rect x="64" y="23" width="13" height="53" rx="6" fill="#FFF5DB"/><path d="m19 42 18-13 17 5 22-17" stroke="#FFDB61" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="m65 17 11 0 0 11" stroke="#FFDB61" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="card-title">Meu progresso</span>
+          <span class="card-description">Veja o quanto você já cresceu!</span>
+          <span class="card-arrow" aria-hidden="true">➜</span>
+        </button>
+        <button class="destination-card card-awards" type="button">
+          <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 100 100" fill="none"><path d="M31 19h38v26c0 16-9 26-19 26S31 61 31 45V19Z" fill="#FFF5DB"/><path d="M31 28H18v12c0 13 8 19 18 18M69 28h13v12c0 13-8 19-18 18" stroke="#FFF5DB" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 70v12m-17 0h34" stroke="#FFF5DB" stroke-width="7" stroke-linecap="round"/><path d="m50 29 4 8 9 1-7 6 2 9-8-4-8 4 2-9-7-6 9-1 4-8Z" fill="#FFB928"/></svg>
+          </span>
+          <span class="card-title">Minhas conquistas</span>
+          <span class="card-description">Suas estrelas e recompensas!</span>
+          <span class="card-arrow" aria-hidden="true">➜</span>
+        </button>
+      </div>
+    </section>
+
+    <p class="motivation" role="status" aria-live="polite">✦ Demonstração visual, sem autenticação real ✦</p>
+  </div>
+</main>
+</body>
+</html>
