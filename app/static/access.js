@@ -73,7 +73,8 @@ form.addEventListener('submit', event => {
   password.value = '';
   confirmation.value = '';
   if (mode === 'signup') {
-    feedback.textContent = 'Em breve você poderá criar sua conta! Nenhuma conta foi criada nesta demonstração.';
+    changeMode('login');
+    feedback.textContent = 'Cadastro demonstrativo concluído! Nenhuma conta foi criada. Entre para continuar.';
     feedback.hidden = false;
     return;
   }

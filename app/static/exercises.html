@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFB928">
+  <title>Desafios — Matemática Descomplicada</title>
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="welcome.css">
+  <link rel="stylesheet" href="exercises.css">
+  <script src="exercises.js" defer></script>
+</head>
+<body>
+<main class="world exercises-world" aria-labelledby="exercise-title">
+  <div class="scenery" aria-hidden="true">
+    <i class="sun"></i><i class="cloud c1"></i><i class="cloud c2"></i>
+    <span class="s1">✦</span><span class="s2">✦</span><span class="n3">3</span><span class="n7">7</span>
+    <span class="plus">+</span><span class="equals">=</span>
+    <span class="exercise-symbol minus">−</span><span class="exercise-symbol times">×</span>
+    <span class="exercise-symbol divide">÷</span><span class="exercise-symbol number">8</span>
+    <i class="hill h1"></i><i class="hill h2"></i>
+  </div>
+
+  <div class="stage exercises-stage">
+    <header class="mission-header">
+      <a class="mission-back" href="dashboard.html">← Voltar ao painel</a>
+      <span class="mission-tag">✦ Fase de matemática ✦</span>
+    </header>
+    <section class="mission-board" aria-labelledby="exercise-title">
+      <span class="mission-spark spark-one" aria-hidden="true">✦</span>
+      <span class="mission-spark spark-two" aria-hidden="true">✧</span>
+      <div class="exercise-content">
+        <p class="mission-eyebrow">✦ Sua missão de agora ✦</p>
+        <h1 id="exercise-title">Vamos <span>resolver?</span></h1>
+        <div class="question-card">
+          <p class="exercise-prompt" id="exercise-prompt">Quanto é?</p>
+          <div class="operation" id="operation" aria-live="polite"></div>
+
+          <form id="typed-form" class="answer-area ds-form-width" novalidate hidden>
+            <label for="typed-answer">Sua resposta</label>
+            <div class="typed-row">
+              <input id="typed-answer" name="answer" type="number" inputmode="numeric" step="1" autocomplete="off" aria-describedby="feedback">
+              <button class="start check-button" type="submit">Conferir resposta</button>
+            </div>
+          </form>
+
+          <fieldset id="choices-area" class="answer-area ds-form-width" hidden>
+            <legend>Escolha uma resposta</legend>
+            <div id="choices" class="choices"></div>
+          </fieldset>
+        </div>
+
+        <p id="feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+        <button id="next-button" class="start next-button" type="button" hidden>Próximo desafio <span aria-hidden="true">➜</span></button>
+      </div>
+      <img class="mascot exercise-turquoise" id="mascot-turquoise" alt="" width="340" height="400">
+      <img class="mascot exercise-coral" id="mascot-coral" alt="" width="320" height="370">
+    </section>
+    <p class="demo-note">✦ Demonstração com questões de exemplo · respostas não são salvas ✦</p>
+  </div>
+</main>
+</body>
+</html>
