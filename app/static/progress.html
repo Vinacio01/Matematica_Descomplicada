@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFB928">
+  <title>Minha evolução — Matemática Descomplicada</title>
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="welcome.css">
+  <link rel="stylesheet" href="progress.css">
+  <script src="progress.js" defer></script>
+</head>
+<body>
+<main class="world progress-world" aria-labelledby="progress-title">
+  <div class="scenery" aria-hidden="true">
+    <i class="sun"></i><i class="cloud c1"></i><i class="cloud c2"></i>
+    <span class="s1">✦</span><span class="s2">✦</span><span class="n3">3</span><span class="n7">7</span>
+    <span class="plus">+</span><span class="equals">=</span>
+    <span class="progress-symbol minus">−</span><span class="progress-symbol times">×</span>
+    <span class="progress-symbol divide">÷</span><span class="progress-symbol number">8</span>
+    <i class="hill h1"></i><i class="hill h2"></i>
+  </div>
+
+  <div class="stage progress-stage">
+    <section class="progress-board" aria-labelledby="progress-title">
+      <span class="board-spark spark-left" aria-hidden="true">✦</span>
+      <span class="board-spark spark-right" aria-hidden="true">✧</span>
+      <div class="progress-content">
+        <h1 id="progress-title">Minha evolução</h1>
+        <p class="progress-subtitle">Acompanhe a evolução do pequeno matemático!</p>
+
+        <div class="progress-grid" aria-label="Indicadores de progresso de demonstração">
+          <article class="progress-card correct-card">
+            <span class="indicator-icon" aria-hidden="true">★</span>
+            <div class="indicator-copy"><h2>Acertos</h2><strong id="correct-count">0</strong></div>
+          </article>
+          <article class="progress-card mistakes-card">
+            <span class="indicator-icon" aria-hidden="true">♡</span>
+            <div class="indicator-copy"><h2>Erros</h2><strong id="mistake-count">0</strong></div>
+          </article>
+          <article class="progress-card streak-card">
+            <span class="indicator-icon" aria-hidden="true">⚡</span>
+            <div class="indicator-copy"><h2>Sequência atual</h2><strong id="streak-count">0</strong></div>
+          </article>
+          <article class="progress-card record-card">
+            <span class="indicator-icon" aria-hidden="true">
+              <svg viewBox="0 0 64 64" fill="none"><path d="M18 12h28v19c0 12-6 19-14 19S18 43 18 31V12Z" fill="currentColor"/><path d="M18 18H9v10c0 9 5 14 13 14m24-24h9v10c0 9-5 14-13 14M32 49v8m-13 0h26" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="m32 19 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6Z" fill="#FFB928"/></svg>
+            </span>
+            <div class="indicator-copy"><h2>Recorde</h2><strong id="record-count">0</strong></div>
+          </article>
+        </div>
+
+        <div class="progress-summary">
+          <p><span>Questões respondidas</span><strong id="total-count">0</strong></p>
+          <p><span>Percentual de acertos</span><strong id="accuracy-count">0%</strong></p>
+        </div>
+        <p class="encouragement">Cada desafio é um passo na sua aventura!</p>
+        <a class="start progress-back" href="dashboard.html">← Voltar ao painel</a>
+      </div>
+      <img class="mascot progress-turquoise" src="assets/mascot-turquoise-progress.svg" alt="Mascote turquesa sorri e segura um troféu de conquista." width="340" height="400">
+      <img class="mascot progress-coral" src="assets/mascot-coral-progress.svg" alt="Mascote coral segura uma estrela de conquista." width="320" height="370">
+    </section>
+    <p class="progress-demo">✦ Dados de demonstração · o progresso ainda não é salvo ✦</p>
+  </div>
+</main>
+</body>
+</html>

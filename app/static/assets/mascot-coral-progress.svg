@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 370" fill="none">
+<title>Mascote coral segurando uma estrela de conquista</title>
+<ellipse cx="163" cy="353" rx="108" ry="13" fill="#321557" opacity=".18"/>
+<path d="M111 290c-13 12-30 20-40 33-10 14 3 25 25 21 24-4 38-21 47-42M202 293c15 7 31 19 41 30 13 14 31 8 27-7-3-13-24-28-48-34" fill="#E9574D"/>
+<path d="M95 114C61 83 59 50 78 39c21-10 38 29 52 47M197 90c14-37 37-53 53-38 13 14-7 47-17 64" fill="#FF705A"/>
+<path d="M78 50q-7 19 16 43M240 64l-16 24" stroke="#FFAF86" stroke-width="10" stroke-linecap="round"/>
+<path d="M76 208c-24 9-37 32-48 55-7 15-20 15-24 4-6-17 17-68 49-82M250 207c21-23 28-48 33-81 3-14 15-18 22-8 12 19 0 70-19 98-10 16-24 25-40 29" fill="#FF705A"/>
+<path d="M65 175c1-58 42-92 98-92 62 0 99 42 101 100l8 64c5 45-36 70-105 70-68 0-111-24-106-70Z" fill="#FF705A"/>
+<path d="M78 151q17-43 57-45" stroke="#FFA386" stroke-width="12" stroke-linecap="round"/>
+<path d="M63 254c30 40 153 42 207-7 6 45-35 70-103 70-61 0-100-18-104-63" fill="#F36253"/>
+<ellipse cx="172" cy="270" rx="46" ry="27" fill="#FFA482"/>
+<ellipse cx="123" cy="179" rx="32" ry="39" fill="#FFF5DB"/><ellipse cx="202" cy="176" rx="34" ry="41" fill="#FFF5DB"/>
+<ellipse cx="119" cy="181" rx="15" ry="21" fill="#392352"/><ellipse cx="198" cy="178" rx="16" ry="22" fill="#392352"/><circle cx="124" cy="173" r="6" fill="white"/><circle cx="203" cy="170" r="6" fill="white"/>
+<path d="m103 128 23-4M187 121q16-8 29 3" stroke="#B54044" stroke-width="7" stroke-linecap="round"/>
+<ellipse cx="91" cy="220" rx="16" ry="9" fill="#F04E58"/><ellipse cx="237" cy="216" rx="16" ry="9" fill="#F04E58"/>
+<path d="M140 218q26 22 53-3c0 44-47 49-53 3" fill="#392352"/><path d="M152 245q16-12 29-1c-7 13-24 15-29 1" fill="#FF9D9A"/><path d="m141 222 14 5 1 10c-8-1-12-5-15-15" fill="#FFF5DB"/>
+<path d="M24 265c-10-3-18-1-20 9-1 10 12 17 25 12M277 113c9-12 10-24 16-25 8-1 11 9 10 17 10-11 17-10 21-2 5 8-8 21-15 33-11 17-29 21-40 10" fill="#FF705A"/>
+<path d="m271 43 10 22 24 3-18 17 4 24-20-11-22 11 4-24-17-17 24-3Z" fill="#FFDB61" stroke="#FFF0AB" stroke-width="5" stroke-linejoin="round"/>
+<path d="M277 137c-10-5-18-11-22-24" stroke="#F36253" stroke-width="15" stroke-linecap="round"/>
+<path d="m268 22-2-12m30 28 9-9m-60 11-9-8" stroke="#FFF5DB" stroke-width="5" stroke-linecap="round"/>
+</svg>
