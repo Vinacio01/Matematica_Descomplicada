@@ -6,7 +6,11 @@ document.querySelectorAll('.play-now, .card-play').forEach(button => {
   });
 });
 
-document.querySelectorAll('.card-progress, .card-awards').forEach(button => {
+document.querySelector('.card-progress').addEventListener('click', () => {
+  window.location.href = 'progress.html';
+});
+
+document.querySelectorAll('.card-awards').forEach(button => {
   button.addEventListener('click', () => {
     dashboardMessage.textContent = '✦ Em breve teremos novas aventuras! ✦';
   });
