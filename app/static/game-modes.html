@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFB928">
+  <title>Escolha seu jogo — Matemática Descomplicada</title>
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="welcome.css">
+  <link rel="stylesheet" href="game-modes.css">
+  <script src="game-state.js" defer></script>
+  <script src="game-modes.js" defer></script>
+</head>
+<body>
+<main class="world modes-world" aria-labelledby="modes-title">
+  <div class="scenery" aria-hidden="true">
+    <i class="sun"></i><i class="cloud c1"></i><i class="cloud c2"></i>
+    <span class="s1">✦</span><span class="s2">✦</span><span class="n3">3</span><span class="n7">7</span>
+    <span class="plus">+</span><span class="equals">=</span><i class="hill h1"></i><i class="hill h2"></i>
+  </div>
+  <div class="stage modes-stage">
+    <a class="modes-back" href="dashboard.html">← Voltar ao painel</a>
+    <section class="modes-board" aria-labelledby="modes-title">
+      <p class="modes-eyebrow">✦ Escolha sua aventura ✦</p>
+      <h1 id="modes-title">Como vamos jogar?</h1>
+      <p class="modes-lead">Do seu jeito, aprender é uma diversão!</p>
+      <div class="modes-grid">
+        <button class="mode-card adventure-card" type="button" data-mode="adventure">
+          <span class="mode-icon" aria-hidden="true">★</span>
+          <span class="mode-title">Modo Aventura</span>
+          <span class="mode-description">10 desafios, uma missão e estrelas para conquistar!</span>
+          <span class="mode-action">Começar aventura <span aria-hidden="true">➜</span></span>
+          <img src="assets/mascot-turquoise-dashboard.svg" alt="" width="340" height="400">
+        </button>
+        <button class="mode-card free-card" type="button" data-mode="free">
+          <span class="mode-icon" aria-hidden="true">∞</span>
+          <span class="mode-title">Treino Livre</span>
+          <span class="mode-description">Resolva quantos desafios quiser, no seu ritmo!</span>
+          <span class="mode-action">Começar treino <span aria-hidden="true">➜</span></span>
+          <img src="assets/mascot-coral-exercises.svg" alt="" width="320" height="370">
+        </button>
+      </div>
+    </section>
+    <p class="modes-note">✦ Jogo de demonstração · partida temporária nesta aba ✦</p>
+  </div>
+</main>
+</body>
+</html>

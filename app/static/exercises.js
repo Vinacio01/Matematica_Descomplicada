@@ -11,6 +11,24 @@
   const missionBoard = document.querySelector('.mission-board');
   const turquoiseMascot = document.getElementById('mascot-turquoise');
   const coralMascot = document.getElementById('mascot-coral');
+  const adventureProgress = document.getElementById('adventure-progress');
+  const challengeCount = document.getElementById('challenge-count');
+  const progressTrack = document.querySelector('.progress-track');
+  const progressFill = document.getElementById('progress-fill');
+  const mode = new URLSearchParams(window.location.search).get('mode') === 'adventure' ? 'adventure' : 'free';
+  let state = window.MathGame.read();
+  if (mode === 'adventure' && (!state || state.mode !== 'adventure')) {
+    window.location.replace('game-modes.html');
+    return;
+  }
+  if (mode === 'adventure' && state.result) {
+    window.location.replace('game-result.html');
+    return;
+  }
+  if (mode === 'free' && (!state || state.mode !== 'free')) state = window.MathGame.start('free');
+  document.querySelector('.exercises-world').classList.toggle('adventure-world', mode === 'adventure');
+  document.getElementById('mode-tag').textContent = mode === 'adventure' ? '✦ Modo Aventura ✦' : '✦ Treino Livre ✦';
+  adventureProgress.hidden = mode !== 'adventure';
   const turquoisePoses = [
     { file: 'mascot-turquoise-thinking.svg', alt: 'Mascote turquesa pensativo, com a mão no queixo.' },
     { file: 'mascot-turquoise-pencil.svg', alt: 'Mascote turquesa concentrado, desenhando com um lápis.' },
@@ -24,6 +42,21 @@
   let currentQuestion = null;
   let answerLocked = false;
   let lastMascotCombination = '';
+  let questionNumber = 0;
+
+  function updateAdventureProgress() {
+    if (mode !== 'adventure') return;
+    state = window.MathGame.read();
+    if (!state || state.result) {
+      window.location.replace(state?.result ? 'game-result.html' : 'game-modes.html');
+      return false;
+    }
+    questionNumber = state.answered + 1;
+    challengeCount.textContent = `Desafio ${questionNumber} de ${window.MathGame.limit}`;
+    progressTrack.setAttribute('aria-valuenow', String(state.answered));
+    progressFill.style.width = `${state.answered * 100 / window.MathGame.limit}%`;
+    return true;
+  }
 
   const randomInteger = (minimum, maximum) =>
     Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
@@ -116,6 +149,7 @@
   }
 
   async function startQuestion() {
+    if (mode === 'adventure' && !updateAdventureProgress()) return;
     answerLocked = true;
     typedAnswer.value = '';
     typedAnswer.disabled = false;
@@ -123,7 +157,8 @@
     choicesElement.replaceChildren();
     feedback.textContent = '';
     feedback.className = 'feedback';
-    nextButton.hidden = true;
+    nextButton.disabled = true;
+    nextButton.classList.remove('is-visible');
     typedForm.hidden = true;
     choicesArea.hidden = true;
     operationElement.textContent = '';
@@ -151,9 +186,12 @@
       }
       answerLocked = false;
     } catch {
+      currentQuestion = null;
       feedback.textContent = 'Ops! Não conseguimos preparar o desafio. Tente novamente!';
       feedback.classList.add('error');
-      nextButton.hidden = false;
+      nextButton.innerHTML = 'Tentar novamente <span aria-hidden="true">➜</span>';
+      nextButton.disabled = false;
+      nextButton.classList.add('is-visible');
     }
   }
 
@@ -167,17 +205,28 @@
 
     try {
       const result = await submitAnswer(currentQuestion, answer);
+      if (mode === 'adventure') {
+        state = window.MathGame.record(result.correct, questionNumber);
+        if (!state) {
+          window.location.reload();
+          return;
+        }
+        progressTrack.setAttribute('aria-valuenow', String(state.answered));
+        progressFill.style.width = `${state.answered * 100 / window.MathGame.limit}%`;
+      }
       if (result.correct) {
         feedback.textContent = 'Muito bem! Você acertou! ✦';
         feedback.classList.add('success');
         if (chosenButton) chosenButton.classList.add('is-correct');
       } else {
-        feedback.textContent = `Quase! A resposta é ${calculateLocalAnswer(currentQuestion)}. Vamos ao próximo?`;
+        feedback.textContent = `Quase! A resposta é ${calculateLocalAnswer(currentQuestion)}. ${state?.result ? 'Você concluiu a aventura!' : 'Vamos ao próximo?'}`;
         feedback.classList.add('error');
         if (chosenButton) chosenButton.classList.add('is-wrong');
         choiceButtons.find(button => Number(button.textContent) === calculateLocalAnswer(currentQuestion))?.classList.add('is-correct');
       }
-      nextButton.hidden = false;
+      nextButton.innerHTML = state?.result ? 'Ver resultado <span aria-hidden="true">➜</span>' : 'Próximo desafio <span aria-hidden="true">➜</span>';
+      nextButton.disabled = false;
+      nextButton.classList.add('is-visible');
       nextButton.focus();
     } catch {
       feedback.textContent = 'Ops! Tente conferir sua resposta mais uma vez.';
@@ -202,6 +251,18 @@
     checkAnswer(Number(raw));
   });
 
-  nextButton.addEventListener('click', startQuestion);
+  nextButton.addEventListener('click', () => {
+    if (mode === 'adventure' && window.MathGame.read()?.result) {
+      window.location.href = 'game-result.html';
+    } else {
+      startQuestion();
+    }
+  });
+  window.addEventListener('pageshow', event => {
+    if (!event.persisted || mode !== 'adventure') return;
+    const current = window.MathGame.read();
+    if (current?.result) window.location.replace('game-result.html');
+    else if (!current || current.answered !== questionNumber - 1) window.location.reload();
+  });
   startQuestion();
 })();

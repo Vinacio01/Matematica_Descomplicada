@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="design-system.css">
   <link rel="stylesheet" href="welcome.css">
   <link rel="stylesheet" href="exercises.css">
+  <script src="game-state.js" defer></script>
   <script src="exercises.js" defer></script>
 </head>
 <body>
@@ -23,8 +24,8 @@
 
   <div class="stage exercises-stage">
     <header class="mission-header">
-      <a class="mission-back" href="dashboard.html">← Voltar ao painel</a>
-      <span class="mission-tag">✦ Fase de matemática ✦</span>
+      <a class="mission-back" href="game-modes.html">← Escolher modo</a>
+      <span class="mission-tag" id="mode-tag">✦ Fase de matemática ✦</span>
     </header>
     <section class="mission-board" aria-labelledby="exercise-title">
       <span class="mission-spark spark-one" aria-hidden="true">✦</span>
@@ -32,31 +33,38 @@
       <div class="exercise-content">
         <p class="mission-eyebrow">✦ Sua missão de agora ✦</p>
         <h1 id="exercise-title">Vamos <span>resolver?</span></h1>
-        <div class="question-card">
-          <p class="exercise-prompt" id="exercise-prompt">Quanto é?</p>
-          <div class="operation" id="operation" aria-live="polite"></div>
-
-          <form id="typed-form" class="answer-area ds-form-width" novalidate hidden>
-            <label for="typed-answer">Sua resposta</label>
-            <div class="typed-row">
-              <input id="typed-answer" name="answer" type="number" inputmode="numeric" step="1" autocomplete="off" aria-describedby="feedback">
-              <button class="start check-button" type="submit">Conferir resposta</button>
-            </div>
-          </form>
-
-          <fieldset id="choices-area" class="answer-area ds-form-width" hidden>
-            <legend>Escolha uma resposta</legend>
-            <div id="choices" class="choices"></div>
-          </fieldset>
+        <div class="adventure-progress" id="adventure-progress" hidden>
+          <p id="challenge-count">Desafio 1 de 10</p>
+          <div class="progress-track" role="progressbar" aria-label="Progresso da aventura" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><span id="progress-fill"></span></div>
         </div>
-
-        <p id="feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
-        <button id="next-button" class="start next-button" type="button" hidden>Próximo desafio <span aria-hidden="true">➜</span></button>
+        <div class="question-card">
+          <div class="question-heading">
+            <p class="exercise-prompt" id="exercise-prompt">Quanto é?</p>
+            <div class="operation" id="operation" aria-live="polite"></div>
+          </div>
+          <div class="answer-slot">
+            <form id="typed-form" class="answer-area ds-form-width" novalidate hidden>
+              <label for="typed-answer">Sua resposta</label>
+              <div class="typed-row">
+                <input id="typed-answer" name="answer" type="number" inputmode="numeric" step="1" autocomplete="off" aria-describedby="feedback">
+                <button class="start check-button" type="submit">Conferir resposta</button>
+              </div>
+            </form>
+            <fieldset id="choices-area" class="answer-area ds-form-width" hidden>
+              <legend>Escolha uma resposta</legend>
+              <div id="choices" class="choices"></div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="response-area">
+          <p id="feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+          <button id="next-button" class="start next-button" type="button" disabled>Próximo desafio <span aria-hidden="true">➜</span></button>
+        </div>
       </div>
       <img class="mascot exercise-turquoise" id="mascot-turquoise" alt="" width="340" height="400">
       <img class="mascot exercise-coral" id="mascot-coral" alt="" width="320" height="370">
     </section>
-    <p class="demo-note">✦ Demonstração com questões de exemplo · respostas não são salvas ✦</p>
+    <p class="demo-note">✦ Questões de demonstração · partida temporária nesta aba ✦</p>
   </div>
 </main>
 </body>

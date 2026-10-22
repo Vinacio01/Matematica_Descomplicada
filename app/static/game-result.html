@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFB928">
+  <title>Resultado da aventura — Matemática Descomplicada</title>
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="welcome.css">
+  <link rel="stylesheet" href="game-result.css">
+  <script src="game-state.js" defer></script>
+  <script src="game-result.js" defer></script>
+</head>
+<body>
+<main class="world result-world" aria-labelledby="result-title">
+  <div class="scenery" aria-hidden="true">
+    <i class="sun"></i><i class="cloud c1"></i><i class="cloud c2"></i>
+    <span class="s1">✦</span><span class="s2">✦</span><span class="n3">3</span><span class="n7">7</span>
+    <span class="plus">+</span><span class="equals">=</span><i class="hill h1"></i><i class="hill h2"></i>
+  </div>
+  <div class="stage result-stage">
+    <section class="result-board" aria-labelledby="result-title">
+      <div class="result-content">
+        <p class="result-eyebrow">✦ Missão completa ✦</p>
+        <h1 id="result-title">Aventura concluída!</h1>
+        <div class="result-stars" id="result-stars" role="img" aria-label="Estrelas conquistadas"></div>
+        <p class="result-message" id="result-message"></p>
+        <div class="result-stats">
+          <p class="stat-correct"><span>Acertos</span><strong id="result-correct">0</strong></p>
+          <p class="stat-errors"><span>Erros</span><strong id="result-errors">0</strong></p>
+          <p class="stat-total"><span>Desafios</span><strong>10</strong></p>
+        </div>
+        <div class="result-actions">
+          <button class="start replay-button" id="replay-button" type="button">Jogar novamente <span aria-hidden="true">➜</span></button>
+          <a class="result-back" href="dashboard.html">Voltar ao painel</a>
+        </div>
+      </div>
+      <img class="mascot result-turquoise" src="assets/mascot-turquoise-progress.svg" alt="Mascote turquesa comemora segurando um troféu." width="340" height="400">
+      <img class="mascot result-coral" src="assets/mascot-coral-progress.svg" alt="Mascote coral comemora com uma estrela." width="320" height="370">
+    </section>
+    <p class="result-note">✦ Resultado desta partida de demonstração ✦</p>
+  </div>
+</main>
+</body>
+</html>

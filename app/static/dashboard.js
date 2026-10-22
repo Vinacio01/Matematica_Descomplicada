@@ -2,7 +2,7 @@ const dashboardMessage = document.querySelector('.motivation');
 
 document.querySelectorAll('.play-now, .card-play').forEach(button => {
   button.addEventListener('click', () => {
-    window.location.href = 'exercises.html';
+    window.location.href = 'game-modes.html';
   });
 });
 
