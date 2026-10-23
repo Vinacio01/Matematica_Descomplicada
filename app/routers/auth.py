@@ -1,6 +1,8 @@
+import os
 import secrets
 
 from fastapi import APIRouter, Cookie, Depends, HTTPException, Response, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -24,7 +26,11 @@ def cadastrar(dados: UsuarioCadastro, db: Session = Depends(get_db)):
 
     novo = Usuario(nome=dados.nome, senha_hash=gerar_hash(dados.senha))
     db.add(novo)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Esse nome já está em uso") from None
     db.refresh(novo)
     return novo
 
@@ -44,6 +50,7 @@ def login(dados: UsuarioLogin, response: Response, db: Session = Depends(get_db)
         value=token,
         httponly=True,
         samesite="lax",
+        secure=os.getenv("APP_COOKIE_SECURE", "0") == "1",
         max_age=60 * 60 * 24 * 7,
     )
     return usuario

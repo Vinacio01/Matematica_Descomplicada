@@ -4,7 +4,7 @@ from datetime import datetime
 
 class UsuarioCadastro(BaseModel):
     nome: str = Field(min_length=3, max_length=30)
-    senha: str = Field(min_length=4)
+    senha: str = Field(min_length=6)
 
     @field_validator("senha")
     @classmethod

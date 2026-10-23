@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="design-system.css">
   <link rel="stylesheet" href="welcome.css">
   <link rel="stylesheet" href="dashboard.css">
+  <script src="auth-session.js" defer></script>
   <script src="dashboard.js" defer></script>
 </head>
 <body>
@@ -22,7 +23,7 @@
   </div>
 
   <div class="stage dashboard-stage">
-    <a class="badge dashboard-badge" href="index.html">✦ Voltar ao início ✦</a>
+    <a class="badge dashboard-badge" href="index.html" id="logout-button">✦ Sair da aventura ✦</a>
     <section class="panel dashboard-panel" aria-labelledby="dashboard-title">
       <div class="doodles" aria-hidden="true"><span>△</span><span>✦</span><span>○</span></div>
       <div class="dashboard-copy">
@@ -69,7 +70,7 @@
       </div>
     </section>
 
-    <p class="motivation" role="status" aria-live="polite">✦ Demonstração visual, sem autenticação real ✦</p>
+    <p class="motivation" role="status" aria-live="polite">✦ Sua aventura continua aqui! ✦</p>
   </div>
 </main>
 </body>
