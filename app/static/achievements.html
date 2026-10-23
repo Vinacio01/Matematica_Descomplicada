@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFB928">
+  <title>Minhas conquistas — Matemática Descomplicada</title>
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="welcome.css">
+  <link rel="stylesheet" href="achievements.css">
+  <script src="achievements.js" defer></script>
+</head>
+<body>
+<main class="world achievements-world" aria-labelledby="achievements-title">
+  <div class="scenery" aria-hidden="true">
+    <i class="sun"></i><i class="cloud c1"></i><i class="cloud c2"></i>
+    <span class="s1">✦</span><span class="s2">✦</span><span class="n3">3</span><span class="n7">7</span>
+    <span class="plus">+</span><span class="equals">=</span>
+    <span class="room-symbol room-times">×</span><span class="room-symbol room-divide">÷</span>
+    <i class="hill h1"></i><i class="hill h2"></i>
+  </div>
+
+  <div class="stage achievements-stage">
+    <section class="trophy-room" aria-labelledby="achievements-title">
+      <div class="party-flags" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="room-confetti" aria-hidden="true">
+        <span>✦</span><span>★</span><span>✦</span><span>●</span><span>★</span><span>✦</span>
+      </div>
+      <div class="room-content">
+        <header class="room-heading">
+          <span class="room-kicker">✦ Sala dos troféus ✦</span>
+          <h1 id="achievements-title">Minhas conquistas</h1>
+          <p>Cada desafio vencido merece uma comemoração!</p>
+        </header>
+
+        <div class="journey-status">
+          <div class="journey-copy">
+            <span class="journey-icon" aria-hidden="true">★</span>
+            <div><strong id="unlocked-count">0 de 4 desbloqueadas</strong><span>Uma coleção para se orgulhar!</span></div>
+          </div>
+          <div class="unlock-meter" role="progressbar" aria-label="Conquistas desbloqueadas" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0">
+            <span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span>
+          </div>
+        </div>
+
+        <div class="achievement-grid" aria-label="Conquistas de demonstração">
+          <article class="achievement-card bronze-card" data-achievement="bronze">
+            <button class="award-select" type="button" aria-label="Selecionar medalha Bronze" aria-controls="award-detail" aria-pressed="false"></button>
+            <div class="award-spotlight"><img class="award-art" src="assets/award-bronze.svg" alt="Medalha de bronze com estrela" width="150" height="150"></div>
+            <h2>Bronze</h2>
+            <span class="award-state">Bloqueada</span>
+          </article>
+          <article class="achievement-card silver-card" data-achievement="silver">
+            <button class="award-select" type="button" aria-label="Selecionar medalha Prata" aria-controls="award-detail" aria-pressed="false"></button>
+            <div class="award-spotlight"><img class="award-art" src="assets/award-silver.svg" alt="Medalha de prata com cristal" width="150" height="150"></div>
+            <h2>Prata</h2>
+            <span class="award-state">Bloqueada</span>
+          </article>
+          <article class="achievement-card gold-card" data-achievement="gold">
+            <button class="award-select" type="button" aria-label="Selecionar medalha Ouro" aria-controls="award-detail" aria-pressed="false"></button>
+            <div class="award-spotlight"><img class="award-art" src="assets/award-gold.svg" alt="Medalha de ouro com coroa" width="150" height="150"></div>
+            <h2>Ouro</h2>
+            <span class="award-state">Bloqueada</span>
+          </article>
+          <article class="achievement-card trophy-card" data-achievement="trophy">
+            <button class="award-select" type="button" aria-label="Selecionar Troféu" aria-controls="award-detail" aria-pressed="false"></button>
+            <div class="award-spotlight"><img class="award-art" src="assets/award-trophy.svg" alt="Troféu dourado com estrela" width="150" height="150"></div>
+            <h2>Troféu</h2>
+            <span class="award-state">Bloqueada</span>
+          </article>
+        </div>
+
+        <div class="room-footer">
+          <div class="award-detail" id="award-detail" role="status" aria-live="polite" aria-atomic="true">
+            <strong id="detail-title">Prata · Próxima meta</strong>
+            <span id="detail-description">10 acertos consecutivos. Continue jogando para ganhar a próxima medalha!</span>
+          </div>
+          <div class="room-actions">
+            <a class="start achievements-next" href="game-modes.html">Conquistar próxima medalha</a>
+            <a class="start achievements-back" href="dashboard.html">← Voltar ao painel</a>
+          </div>
+        </div>
+      </div>
+      <img class="mascot achievements-turquoise" src="assets/mascot-turquoise-achievements.svg" alt="Mascote turquesa orgulhoso segurando uma medalha." width="340" height="400">
+      <img class="mascot achievements-coral" src="assets/mascot-coral-achievements.svg" alt="Mascote coral comemorando com confetes." width="320" height="370">
+    </section>
+    <p class="achievements-demo">✦ Dados de demonstração: sequência de 7 acertos consecutivos. As conquistas não são salvas. ✦</p>
+  </div>
+</main>
+</body>
+</html>
