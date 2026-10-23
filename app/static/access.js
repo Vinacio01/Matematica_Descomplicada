@@ -1,9 +1,10 @@
-﻿const form = document.querySelector('#access-form');
+const form = document.querySelector('#access-form');
 const modeButtons = [...document.querySelectorAll('[data-mode]')];
 const nameInput = document.querySelector('#name');
 const password = document.querySelector('#password');
 const confirmation = document.querySelector('#confirm');
 const feedback = document.querySelector('.feedback');
+const submit = form.querySelector('[type="submit"]');
 let mode = 'login';
 
 function setError(input, message) {
@@ -12,6 +13,18 @@ function setError(input, message) {
   error.hidden = !message;
   if (message) input.setAttribute('aria-invalid', 'true');
   else input.removeAttribute('aria-invalid');
+}
+
+function showFeedback(message) {
+  feedback.textContent = message;
+  feedback.hidden = false;
+}
+
+function updateReveal(button, visible) {
+  const isConfirmation = button.getAttribute('aria-controls') === 'confirm';
+  button.textContent = visible ? 'Ocultar' : 'Mostrar';
+  button.setAttribute('aria-pressed', String(visible));
+  button.setAttribute('aria-label', `${visible ? 'Ocultar' : 'Mostrar'} ${isConfirmation ? 'confirmação de senha' : 'senha'}`);
 }
 
 function changeMode(nextMode) {
@@ -30,18 +43,11 @@ function changeMode(nextMode) {
   confirmation.required = signup;
   password.autocomplete = signup ? 'new-password' : 'current-password';
   form.setAttribute('aria-label', signup ? 'Criar conta' : 'Entrar');
-  document.title = `${signup ? 'Criar conta' : 'Entrar na aventura'} — Matemática Descomplicada`;
+  document.title = `${signup ? 'Criar conta' : 'Entrar na aventura'} - Matemática Descomplicada`;
   [nameInput, password, confirmation].forEach(input => setError(input, ''));
   [password, confirmation].forEach(input => { input.value = ''; input.type = 'password'; });
   document.querySelectorAll('.reveal').forEach(button => updateReveal(button, false));
   feedback.hidden = true;
-}
-
-function updateReveal(button, visible) {
-  const confirmationButton = button.getAttribute('aria-controls') === 'confirm';
-  button.textContent = visible ? 'Ocultar' : 'Mostrar';
-  button.setAttribute('aria-pressed', String(visible));
-  button.setAttribute('aria-label', `${visible ? 'Ocultar' : 'Mostrar'} ${confirmationButton ? 'confirmação de senha' : 'senha'}`);
 }
 
 modeButtons.forEach(button => button.addEventListener('click', () => {
@@ -62,21 +68,53 @@ document.querySelectorAll('.reveal').forEach(button => button.addEventListener('
   if (input === password) setError(confirmation, '');
   feedback.hidden = true;
 }));
-form.addEventListener('submit', event => {
+
+form.addEventListener('submit', async event => {
   event.preventDefault();
+  if (submit.disabled) return;
   feedback.hidden = true;
-  setError(nameInput, nameInput.value.trim() ? '' : 'Conte para a gente o seu nome.');
-  setError(password, !password.value ? 'Digite sua senha para continuar.' : mode === 'signup' && password.value.length < 6 ? 'Sua senha precisa ter pelo menos 6 caracteres.' : '');
+  const name = mode === 'signup' ? nameInput.value.trim() : nameInput.value;
+  const nameLength = Array.from(name).length;
+  setError(nameInput, nameLength < 3 || nameLength > 30 ? 'Escolha um nome com 3 a 30 caracteres.' : '');
+  let passwordError = !password.value ? 'Digite sua senha para continuar.' : '';
+  if (mode === 'signup' && !passwordError) {
+    if (Array.from(password.value).length < 6) passwordError = 'Sua senha precisa ter pelo menos 6 caracteres.';
+    else if (new TextEncoder().encode(password.value).length > 72) passwordError = 'Escolha uma senha um pouco menor.';
+  }
+  setError(password, passwordError);
   setError(confirmation, mode !== 'signup' ? '' : !confirmation.value ? 'Repita sua senha aqui também.' : password.value !== confirmation.value ? 'As senhas estão diferentes. Vamos tentar de novo?' : '');
   const invalid = form.querySelector('[aria-invalid="true"]');
   if (invalid) { invalid.focus(); return; }
-  password.value = '';
-  confirmation.value = '';
-  if (mode === 'signup') {
-    changeMode('login');
-    feedback.textContent = 'Cadastro demonstrativo concluído! Nenhuma conta foi criada. Entre para continuar.';
-    feedback.hidden = false;
-    return;
+
+  submit.disabled = true;
+  try {
+    const signup = mode === 'signup';
+    const response = await fetch(signup ? '/api/cadastro' : '/api/login', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome: name, senha: password.value }),
+    });
+    if (!response.ok) {
+      if (response.status === 409) setError(nameInput, 'Esse nome já está em uso. Escolha outro!');
+      else if (response.status === 401) showFeedback('Nome ou senha não conferem. Vamos tentar de novo?');
+      else if (response.status === 422) showFeedback('Confira seu nome e sua senha e tente novamente.');
+      else showFeedback('Não conseguimos entrar agora. Tente novamente em instantes.');
+      if (response.status === 409) nameInput.focus();
+      return;
+    }
+    password.value = '';
+    confirmation.value = '';
+    if (signup) {
+      changeMode('login');
+      showFeedback('Conta criada! Agora entre para começar a aventura.');
+    } else {
+      sessionStorage.removeItem('matematica-descomplicada-partida');
+      window.location.assign('dashboard.html');
+    }
+  } catch {
+    showFeedback('Sem conexão no momento. Confira a internet e tente de novo.');
+  } finally {
+    submit.disabled = false;
   }
-  window.location.href = 'dashboard.html';
 });

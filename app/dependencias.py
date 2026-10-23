@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 from fastapi import Cookie, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -14,6 +16,14 @@ def usuario_logado(
 
     sessao = db.query(SessaoLogin).filter(SessaoLogin.token == token).first()
     if not sessao:
+        raise HTTPException(status_code=401, detail="Sessão inválida ou expirada")
+
+    criada_em = sessao.criada_em
+    if criada_em.tzinfo is None:
+        criada_em = criada_em.replace(tzinfo=timezone.utc)
+    if criada_em + timedelta(days=7) <= datetime.now(timezone.utc):
+        db.delete(sessao)
+        db.commit()
         raise HTTPException(status_code=401, detail="Sessão inválida ou expirada")
 
     usuario = db.get(Usuario, sessao.usuario_id)
