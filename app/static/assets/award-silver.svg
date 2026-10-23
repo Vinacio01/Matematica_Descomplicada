@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" fill="none">
+<title>Medalha de prata com cristal</title>
+<path d="M39 8h33l13 52-25 9L39 8Z" fill="#7447CE" stroke="#5730A0" stroke-width="4" stroke-linejoin="round"/>
+<path d="M111 8H78L65 60l25 9 21-61Z" fill="#2BC9C5" stroke="#188F96" stroke-width="4" stroke-linejoin="round"/>
+<path d="M75 40 101 49l18 22v34l-18 22-26 9-26-9-18-22V71l18-22 26-9Z" fill="#829BA9" stroke="#5F7A8B" stroke-width="4" stroke-linejoin="round"/>
+<path d="M75 48 98 55l15 19v28l-15 19-23 8-23-8-15-19V74l15-19 23-7Z" fill="#E6F6FA" stroke="white" stroke-width="5" stroke-linejoin="round"/>
+<path d="M75 57 94 63l11 15v20l-11 15-19 7-19-7-11-15V78l11-15 19-6Z" fill="#B8D2DF" stroke="#8AA8B8" stroke-width="3" stroke-linejoin="round"/>
+<path d="m75 68 8 14 17 4-12 12 2 17-15-8-15 8 2-17-12-12 17-4 8-14Z" fill="#FFF" stroke="#D9F7FF" stroke-width="2" stroke-linejoin="round"/>
+<path d="M48 77c4-8 11-14 19-17" stroke="white" stroke-width="5" stroke-linecap="round" opacity=".9"/>
+<path d="m18 55 3-8 3 8 8 3-8 3-3 8-3-8-8-3 8-3ZM124 31l2-6 2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="#FFF5DB"/>
+</svg>

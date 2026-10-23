@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 400" fill="none">
+<title>Mascote turquesa sorrindo e exibindo uma medalha</title>
+<ellipse cx="170" cy="383" rx="104" ry="12" fill="#321557" opacity=".18"/>
+<path d="M107 323c-19 9-34 23-45 25-20 4-24 19-9 27 17 9 43 0 66-15l34-27M213 326c16 7 30 17 43 34 10 13 25 10 27-3 2-16-16-31-36-40l-39-13" fill="#23ABA8"/>
+<path d="M69 195c-31 1-49 23-49 52 0 22 19 37 38 29 16-7 25-27 31-49M251 197c21-9 34-27 39-49 4-17 19-21 26-9 11 17-5 55-25 77-16 18-30 26-45 28" fill="#2BC9C5"/>
+<path d="M64 203c2-76 36-124 105-124 76 0 108 56 107 126l-4 73c-2 54-42 79-104 79-64 0-102-25-104-78Z" fill="#2BC9C5"/>
+<path d="M79 166c9-41 33-62 70-69" stroke="#8BECE1" stroke-width="12" stroke-linecap="round"/>
+<path d="M71 283c28 51 147 61 201-9-3 59-38 83-104 83-59 0-91-22-97-74" fill="#22B5B4"/>
+<ellipse cx="170" cy="294" rx="56" ry="36" fill="#84E5D2"/>
+<path d="M132 85c-5-23 5-43 21-45 10 8 12 20 11 32 10-18 25-23 37-15-2 17-15 28-30 31" fill="#2BC9C5"/>
+<ellipse cx="127" cy="186" rx="33" ry="42" fill="#FFF5DB"/><ellipse cx="209" cy="184" rx="34" ry="43" fill="#FFF5DB"/>
+<ellipse cx="142" cy="191" rx="15" ry="23" fill="#30204D"/><ellipse cx="220" cy="189" rx="15" ry="23" fill="#30204D"/><circle cx="148" cy="182" r="6" fill="white"/><circle cx="226" cy="180" r="6" fill="white"/>
+<path d="M107 132q17-11 32-4M194 125q17-10 33 4" stroke="#238D95" stroke-width="8" stroke-linecap="round"/>
+<ellipse cx="100" cy="231" rx="18" ry="10" fill="#FF9685"/><ellipse cx="240" cy="227" rx="17" ry="10" fill="#FF9685"/>
+<path d="M139 225q29 24 64-2c-3 51-58 53-64 2" fill="#392352"/><path d="M154 254q18-14 34-2c-10 14-26 14-34 2" fill="#FF817E"/><path d="m140 229 16 6 1 8c-8-1-14-6-17-14" fill="#FFF5DB"/>
+<!-- The left hand gives a cheerful wave; the right hand holds the medal up. -->
+<path d="M45 240c-12-3-21-14-20-24 1-8 9-8 14 0-4-16 2-24 9-19 6 4 5 15 4 19 4-13 12-14 16-8 5 7-1 21-4 26 12-8 20-5 20 2 0 9-16 22-31 26" fill="#2BC9C5"/>
+<path d="M292 145c-4-13-3-25 5-27 8-2 11 10 12 15 4-10 12-12 17-6 7 9-3 24-8 29l-18 13" fill="#2BC9C5"/>
+<path d="M272 100h34l-8 37-22 2-4-39Z" fill="#7447CE" stroke="#5D36A5" stroke-width="3" stroke-linejoin="round"/>
+<path d="M278 99h33l-13 41-20-1V99Z" fill="#FF705A" stroke="#D85351" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="291" cy="164" r="35" fill="#B46D2C"/><circle cx="291" cy="159" r="33" fill="#FFCF59" stroke="#FFF2BB" stroke-width="4"/><circle cx="291" cy="159" r="24" fill="#EFA933" stroke="#C8872B" stroke-width="3"/>
+<path d="m291 140 5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2 5-10Z" fill="#FFF5DB"/>
+<path d="M263 186c7-12 15-16 23-13 8 4 10 13 4 21-8 9-19 12-29 7" fill="#2BC9C5"/>
+<path d="m28 110 4 8 9 1-7 7 2 9-8-4-8 4 2-9-7-7 9-1Z" fill="#FFDB61"/>
+</svg>

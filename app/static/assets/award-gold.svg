@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" fill="none">
+<title>Medalha de ouro com coroa</title>
+<path d="M39 7h31l16 52-25 9L39 7Z" fill="#FF705A" stroke="#D8514C" stroke-width="4" stroke-linejoin="round"/>
+<path d="M111 7H80L64 59l25 9 22-61Z" fill="#7447CE" stroke="#5730A0" stroke-width="4" stroke-linejoin="round"/>
+<path d="m75 36 12 12 17-1 5 16 16 6-2 17 10 12-10 14 1 17-17 4-9 14-18-5-18 5-9-14-17-4 1-17-10-14 10-12-2-17 16-6 5-16 17 1 12-12Z" fill="#C77922" stroke="#9D5819" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="75" cy="93" r="46" fill="#FFE16B" stroke="#FFF2B0" stroke-width="6"/>
+<circle cx="75" cy="93" r="33" fill="#F5AE2F" stroke="#D4881F" stroke-width="3"/>
+<path d="m52 90 5 24h36l5-24-12 8-11-17-11 17-12-8Z" fill="#FFF4CC" stroke="#FFDB61" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="75" cy="80" r="4" fill="#FF705A"/><circle cx="52" cy="88" r="4" fill="#2BC9C5"/><circle cx="98" cy="88" r="4" fill="#7447CE"/>
+<path d="M49 77c5-9 11-15 20-18" stroke="#FFFBE7" stroke-width="5" stroke-linecap="round"/>
+<path d="m17 71 3-9 3 9 9 3-9 3-3 9-3-9-9-3 9-3Zm113-23 2-7 2 7 7 2-7 2-2 7-2-7-7-2 7-2Z" fill="#FFF5DB"/>
+</svg>

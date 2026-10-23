@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" fill="none">
+<title>Troféu dourado com estrela</title>
+<path d="m75 2 4 10 11 2-8 7 2 11-9-5-9 5 2-11-8-7 11-2 4-10Z" fill="#FFDB61"/>
+<path d="M39 37H15v21c0 23 14 38 33 38m63-59h24v21c0 23-14 38-33 38" stroke="#B87929" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M31 23h88l-8 58c-3 28-18 42-36 42S42 109 39 81l-8-58Z" fill="#D58B29" stroke="#A66220" stroke-width="4" stroke-linejoin="round"/>
+<path d="M39 30h72l-7 49c-3 24-13 35-29 35S49 103 46 79l-7-49Z" fill="#FFD85B" stroke="#FFF1A9" stroke-width="5" stroke-linejoin="round"/>
+<path d="M49 40h52l-5 39c-2 17-10 27-21 27S56 96 54 79l-5-39Z" fill="#FFE585"/>
+<path d="m75 47 7 13 15 2-11 11 3 16-14-8-14 8 3-16-11-11 15-2 7-13Z" fill="#FFF9D8" stroke="#D99530" stroke-width="2" stroke-linejoin="round"/>
+<path d="M75 123v12m-23 0h46l7 11H45l7-11Z" fill="#F0AE3B" stroke="#A66220" stroke-width="5" stroke-linejoin="round"/>
+<path d="m20 12 3-7 3 7 7 3-7 3-3 7-3-7-7-3 7-3Zm110 5 2-6 2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="#2BC9C5"/>
+</svg>
