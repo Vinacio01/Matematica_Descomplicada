@@ -218,3 +218,46 @@ def test_ten_questions_free_training_and_user_isolation(server):
     free_question = json.loads(body)
     assert free_question["id"] != question["id"]
     assert json.loads(request(base, "/api/questao", jar=jar)[1])["id"] == free_question["id"]
+
+
+def test_progress_across_sessions_and_users(server):
+    base, work = server
+    assert request(base, "/api/cadastro", {"nome": "EvolucaoA", "senha": "senha123"})[0] == 201
+    jar = http.cookiejar.CookieJar()
+    assert request(base, "/api/login", {"nome": "EvolucaoA", "senha": "senha123"}, jar)[0] == 200
+    csrf = json.loads(request(base, "/api/csrf", jar=jar)[1])["csrf_token"]
+    headers = {"X-CSRF-Token": csrf}
+
+    expected = {"acertos": 0, "erros": 0, "sequencia_atual": 0, "recorde": 0}
+    assert json.loads(request(base, "/api/progresso", jar=jar)[1]) == expected
+    with sqlite3.connect(work / "matematica.db") as db:
+        assert db.execute("SELECT COUNT(*) FROM progressos WHERE usuario_id = (SELECT id FROM usuarios WHERE nome = ?)", ("EvolucaoA",)).fetchone()[0] == 0
+
+    for number in range(1, 11):
+        status, body, _ = request(base, "/api/questao", jar=jar, headers=headers, method="POST")
+        assert status == 200
+        question = json.loads(body)
+        first, operator, second = question["enunciado"].split()
+        a, b = int(first), int(second)
+        correct = {"+": lambda: a + b, "-": lambda: a - b, "×": lambda: a * b, "÷": lambda: a // b}[operator]()
+        answer = -999 if number in (4, 7) else correct
+        assert request(base, "/api/responder", {"questao_id": question["id"], "resposta": answer}, jar, headers)[0] == 200
+        progress = json.loads(request(base, "/api/progresso", jar=jar)[1])
+        assert progress["acertos"] + progress["erros"] == number
+        if number in (4, 7):
+            assert progress["sequencia_atual"] == 0
+            assert progress["recorde"] == 3
+        if number == 10:
+            assert progress == {"acertos": 8, "erros": 2, "sequencia_atual": 3, "recorde": 3}
+
+    assert request(base, "/api/logout", {}, jar, headers)[0] == 204
+    assert request(base, "/api/progresso", jar=jar)[0] == 401
+    assert request(base, "/api/login", {"nome": "EvolucaoA", "senha": "senha123"}, jar)[0] == 200
+    assert json.loads(request(base, "/api/progresso", jar=jar)[1]) == progress
+
+    assert request(base, "/api/cadastro", {"nome": "EvolucaoB", "senha": "senha456"})[0] == 201
+    other_jar = http.cookiejar.CookieJar()
+    assert request(base, "/api/login", {"nome": "EvolucaoB", "senha": "senha456"}, other_jar)[0] == 200
+    assert json.loads(request(base, "/api/progresso", jar=other_jar)[1]) == expected
+    with sqlite3.connect(work / "matematica.db") as db:
+        assert db.execute("SELECT COUNT(*) FROM progressos WHERE usuario_id = (SELECT id FROM usuarios WHERE nome = ?)", ("EvolucaoB",)).fetchone()[0] == 0

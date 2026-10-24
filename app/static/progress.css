@@ -15,6 +15,7 @@
 .progress-summary p{display:flex;align-items:center;justify-content:space-between;gap:9px;min-height:53px;margin:0;padding:8px 13px;border:2px solid #e9c8a0;border-radius:17px;background:#fffaf0;text-align:left;box-shadow:0 4px 0 #dda85a5c}
 .progress-summary span{font-size:15px;font-weight:900;line-height:1.12}.progress-summary strong{font:800 27px/1 var(--font-display);white-space:nowrap}
 .encouragement{margin:13px 0 12px;color:#81476f;font-size:16px;font-weight:900;line-height:1.2}
+.progress-retry{margin:0 0 12px;padding:7px 16px;border:2px solid var(--purple);border-radius:14px;background:var(--cream);color:var(--purple);font:900 16px var(--font-body);cursor:pointer}.progress-retry:focus-visible{outline:4px solid var(--color-coral);outline-offset:3px}
 .progress-back{min-height:var(--primary-button-height);padding:8px 23px;text-decoration:none;font-size:var(--primary-button-font-size)}
 .progress-back:focus-visible{outline-color:var(--purple);outline-offset:5px}
 .progress-turquoise{width:167px;height:auto;left:0;bottom:1px;animation:bob-left 5s ease-in-out infinite}
