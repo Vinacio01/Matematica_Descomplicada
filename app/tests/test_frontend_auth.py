@@ -50,13 +50,14 @@ def server(tmp_path_factory):
         process.wait(timeout=5)
 
 
-def request(base, path, payload=None, jar=None, headers=None):
+def request(base, path, payload=None, jar=None, headers=None, method=None):
     opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar if jar is not None else http.cookiejar.CookieJar()))
-    body = json.dumps(payload).encode() if payload is not None else None
+    method = method or ("POST" if payload is not None else "GET")
+    body = json.dumps(payload).encode() if payload is not None else (b"" if method == "POST" else None)
     req = urllib.request.Request(
         base + path, data=body,
         headers={"Content-Type": "application/json", **(headers or {})},
-        method="POST" if payload is not None else "GET",
+        method=method,
     )
     try:
         response = opener.open(req)
@@ -108,18 +109,53 @@ def test_frontend_and_authentication(server):
     for page in protected:
         assert request(base, f"/{page}.html", jar=jar)[0] == 200
 
-    status, body, _ = request(base, "/api/questao", jar=jar)
+    assert json.loads(request(base, "/api/progresso", jar=jar)[1])["acertos"] == 0
+    with sqlite3.connect(work / "matematica.db") as db:
+        assert db.execute("SELECT COUNT(*) FROM progressos").fetchone()[0] == 0
+    assert request(base, "/api/questao", jar=jar)[0] == 404
+    with sqlite3.connect(work / "matematica.db") as db:
+        assert db.execute("SELECT COUNT(*) FROM questoes").fetchone()[0] == 0
+    status, body, _ = request(base, "/api/csrf", jar=jar)
+    assert status == 200
+    csrf = json.loads(body)["csrf_token"]
+    csrf_header = {"X-CSRF-Token": csrf}
+    assert request(base, "/api/questao", jar=jar, method="POST")[0] == 403
+    status, body, _ = request(base, "/api/questao?formato=alternativas", jar=jar, headers=csrf_header, method="POST")
     assert status == 200
     question_id = json.loads(body)["id"]
-    status, body, _ = request(base, "/api/responder", {"questao_id": question_id, "resposta": -999}, jar)
+    options = json.loads(body)["alternativas"]
+    assert len(options) == len(set(options)) == 4
+    assert "resposta_certa" not in json.loads(body)
+    assert json.loads(request(base, "/api/questao?formato=alternativas", jar=jar)[1])["id"] == question_id
+    assert json.loads(request(base, "/api/questao", jar=jar, headers=csrf_header, method="POST")[1])["id"] == question_id
+    status, body, _ = request(base, "/api/responder", {"questao_id": question_id, "resposta": -999}, jar, csrf_header)
     assert status == 200 and json.loads(body)["correta"] is False
+    status, body, _ = request(base, "/api/responder", {"questao_id": question_id, "resposta": -999}, jar, csrf_header)
+    assert status == 200 and json.loads(body)["correta"] is False
+    assert request(base, "/api/responder", {"questao_id": question_id, "resposta": 0}, jar, csrf_header)[0] == 409
     status, body, _ = request(base, "/api/progresso", jar=jar)
     assert status == 200 and json.loads(body)["erros"] == 1
     assert request(base, "/api/conquistas", jar=jar)[0] == 200
 
+    status, body, _ = request(base, "/api/questao", jar=jar, headers=csrf_header, method="POST")
+    assert status == 200 and json.loads(body)["alternativas"] is None
+    typed_question = json.loads(body)
+    first, operator, second = typed_question["enunciado"].split()
+    a, b = int(first), int(second)
+    answer = {"+": lambda: a + b, "-": lambda: a - b, "×": lambda: a * b, "÷": lambda: a // b}[operator]()
+    status, body, _ = request(base, "/api/responder", {"questao_id": typed_question["id"], "resposta": answer}, jar, csrf_header)
+    assert status == 200 and json.loads(body)["correta"] is True
+    assert json.loads(request(base, "/api/progresso", jar=jar)[1])["acertos"] == 1
+
+    other_jar = http.cookiejar.CookieJar()
+    assert request(base, "/api/login", {"nome": "LimiteSenha", "senha": "á" * 36}, other_jar)[0] == 200
+    other_csrf = json.loads(request(base, "/api/csrf", jar=other_jar)[1])["csrf_token"]
+    assert request(base, "/api/responder", {"questao_id": typed_question["id"], "resposta": answer}, other_jar, {"X-CSRF-Token": other_csrf})[0] == 404
+
     assert request(base, "/api/logout", {}, jar, {"Origin": "https://wrong.example"})[0] == 403
     assert request(base, "/api/eu", jar=jar)[0] == 200
-    assert request(base, "/api/logout", {}, jar)[0] == 204
+    assert request(base, "/api/logout", {}, jar)[0] == 403
+    assert request(base, "/api/logout", {}, jar, csrf_header)[0] == 204
     assert request(base, "/api/eu", jar=jar)[0] == 401
     assert request(base, "/api/eu", headers={"Cookie": f"token={old_token}"})[0] == 401
     assert request(base, "/dashboard.html", jar=jar)[0] == 401
@@ -135,3 +171,50 @@ def test_frontend_and_authentication(server):
     assert request(base, "/api/eu", jar=old_jar)[0] == 401
     status, body, _ = request(base, "/dashboard.html", jar=old_jar, headers={"Accept": "text/html"})
     assert status == 200 and b"access-form" in body
+
+
+def test_ten_questions_free_training_and_user_isolation(server):
+    base, work = server
+    assert request(base, "/api/cadastro", {"nome": "PartidaCompleta", "senha": "senha123"})[0] == 201
+    jar = http.cookiejar.CookieJar()
+    assert request(base, "/api/login", {"nome": "PartidaCompleta", "senha": "senha123"}, jar)[0] == 200
+    csrf = json.loads(request(base, "/api/csrf", jar=jar)[1])["csrf_token"]
+    headers = {"X-CSRF-Token": csrf}
+
+    for number in range(1, 11):
+        format = "alternativas" if number % 2 else "digitada"
+        status, body, _ = request(base, f"/api/questao?formato={format}", jar=jar, headers=headers, method="POST")
+        assert status == 200
+        question = json.loads(body)
+        first, operator, second = question["enunciado"].split()
+        a, b = int(first), int(second)
+        correct_answer = {"+": lambda: a + b, "-": lambda: a - b, "×": lambda: a * b, "÷": lambda: a // b}[operator]()
+        if format == "alternativas":
+            assert len(question["alternativas"]) == 4
+            assert correct_answer in question["alternativas"]
+        else:
+            assert question["alternativas"] is None
+        answer = correct_answer if number <= 7 else -999
+        payload = {"questao_id": question["id"], "resposta": answer}
+        status, body, _ = request(base, "/api/responder", payload, jar, headers)
+        assert status == 200 and json.loads(body)["correta"] is (number <= 7)
+        assert request(base, "/api/responder", payload, jar, headers)[0] == 200
+        assert request(base, "/api/questao", jar=jar)[0] == 404
+
+    progress = json.loads(request(base, "/api/progresso", jar=jar)[1])
+    assert (progress["acertos"], progress["erros"], progress["recorde"]) == (7, 3, 7)
+    with sqlite3.connect(work / "matematica.db") as db:
+        assert db.execute("SELECT COUNT(*) FROM respostas_questao WHERE questao_id IN (SELECT id FROM questoes WHERE usuario_id = (SELECT id FROM usuarios WHERE nome = ?))", ("PartidaCompleta",)).fetchone()[0] == 10
+
+    assert request(base, "/api/cadastro", {"nome": "OutroJogador", "senha": "senha456"})[0] == 201
+    other_jar = http.cookiejar.CookieJar()
+    assert request(base, "/api/login", {"nome": "OutroJogador", "senha": "senha456"}, other_jar)[0] == 200
+    other_csrf = json.loads(request(base, "/api/csrf", jar=other_jar)[1])["csrf_token"]
+    assert request(base, "/api/responder", payload, other_jar, {"X-CSRF-Token": other_csrf})[0] == 404
+    assert json.loads(request(base, "/api/progresso", jar=other_jar)[1])["acertos"] == 0
+
+    status, body, _ = request(base, "/api/questao", jar=jar, headers=headers, method="POST")
+    assert status == 200
+    free_question = json.loads(body)
+    assert free_question["id"] != question["id"]
+    assert json.loads(request(base, "/api/questao", jar=jar)[1])["id"] == free_question["id"]

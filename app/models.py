@@ -59,6 +59,14 @@ class Questao(Base):
     )
 
 
+class RespostaQuestao(Base):
+    __tablename__ = "respostas_questao"
+
+    questao_id = Column(Integer, ForeignKey("questoes.id"), primary_key=True)
+    resposta = Column(Integer, nullable=False)
+    correta = Column(Boolean, nullable=False)
+
+
 class Progresso(Base):
     __tablename__ = "progressos"
 

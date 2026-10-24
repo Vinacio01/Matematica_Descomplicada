@@ -25,12 +25,11 @@
     starsElement.append(star);
   }
   const messages = [
-    'Você chegou até o fim! Cada tentativa faz você crescer. Vamos de novo?',
     'Muito bem! Sua aventura está só começando!',
     'Que conquista! Você brilhou nesta aventura!',
-    'Incrível! Você acertou todos os desafios!'
+    'Incrível! Você conquistou três estrelas nesta aventura!'
   ];
-  document.getElementById('result-message').textContent = messages[stars];
+  document.getElementById('result-message').textContent = messages[stars - 1];
   document.getElementById('replay-button').addEventListener('click', () => {
     window.MathGame.start('adventure');
     window.location.href = 'exercises.html?mode=adventure';

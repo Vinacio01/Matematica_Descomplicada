@@ -1,4 +1,10 @@
 import bcrypt
+import hashlib
+import hmac
+
+
+def gerar_token_csrf(token_sessao: str) -> str:
+    return hmac.new(token_sessao.encode("utf-8"), b"matematica-csrf-v1", hashlib.sha256).hexdigest()
 
 def gerar_hash(senha: str) -> str:
     senha_bytes = senha.encode("utf-8")

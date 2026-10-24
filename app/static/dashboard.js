@@ -24,10 +24,7 @@ document.querySelector('#logout-button').addEventListener('click', async event =
   if (button.dataset.busy) return;
   button.dataset.busy = 'true';
   try {
-    const response = await fetch('/api/logout', {
-      method: 'POST',
-      credentials: 'same-origin',
-    });
+    const response = await window.authenticatedPost('/api/logout');
     if (!response.ok) throw new Error('logout failed');
     sessionStorage.removeItem('matematica-descomplicada-partida');
     window.location.replace('index.html');
