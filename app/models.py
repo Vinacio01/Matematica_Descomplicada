@@ -67,6 +67,13 @@ class RespostaQuestao(Base):
     correta = Column(Boolean, nullable=False)
 
 
+class DesbloqueioQuestao(Base):
+    __tablename__ = "desbloqueios_questao"
+
+    questao_id = Column(Integer, ForeignKey("questoes.id"), primary_key=True)
+    conquista_codigo = Column(String, nullable=False)
+
+
 class Progresso(Base):
     __tablename__ = "progressos"
 

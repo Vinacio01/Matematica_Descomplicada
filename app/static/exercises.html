@@ -7,10 +7,10 @@
   <title>Desafios — Matemática Descomplicada</title>
   <link rel="stylesheet" href="design-system.css">
   <link rel="stylesheet" href="welcome.css">
-  <link rel="stylesheet" href="exercises.css?v=20261024-3">
+  <link rel="stylesheet" href="exercises.css?v=20261024-5">
   <script src="auth-session.js" defer></script>
   <script src="game-state.js?v=20261024-3" defer></script>
-  <script src="exercises.js?v=20261024-4" defer></script>
+  <script src="exercises.js?v=20261024-5" defer></script>
 </head>
 <body>
 <main class="world exercises-world" aria-labelledby="exercise-title">
@@ -73,6 +73,16 @@
     <h2 id="keyboard-intro-title">🎮 Você também pode jogar usando o teclado!</h2>
     <p id="keyboard-intro-description">Nas perguntas de múltipla escolha, pressione 1, 2, 3 ou 4 para escolher sua resposta. Nas perguntas digitadas, basta escrever o resultado e apertar Enter!</p>
     <button class="start keyboard-intro-button" id="keyboard-intro-button" type="button">Entendi! Vamos jogar!</button>
+  </div>
+</div>
+<div class="achievement-celebration" id="achievement-celebration" hidden>
+  <div class="achievement-celebration-panel" role="dialog" aria-modal="true" aria-labelledby="celebration-title" aria-describedby="celebration-description">
+    <div class="celebration-sparkles" aria-hidden="true"><span>✦</span><span>★</span><span>✧</span><span>★</span><span>✦</span></div>
+    <h2 id="celebration-title">Parabéns! Nova conquista!</h2>
+    <img id="celebration-art" alt="" width="150" height="150">
+    <strong id="celebration-name"></strong>
+    <p id="celebration-description"></p>
+    <button class="start celebration-continue" id="celebration-continue" type="button">Continuar jogando</button>
   </div>
 </div>
 </body>

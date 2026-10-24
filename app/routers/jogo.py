@@ -9,7 +9,7 @@ from app.conquistas import obter_conquista_da_sequencia
 from app.database import get_db
 from app.dependencias import usuario_logado
 from app.jogo import gerar_conta, sortear_operacao
-from app.models import Conquista, Progresso, Questao, RespostaQuestao, Usuario
+from app.models import Conquista, DesbloqueioQuestao, Progresso, Questao, RespostaQuestao, Usuario
 from app.schemas import (
     ConquistaResposta,
     ListaConquistaResposta,
@@ -54,6 +54,28 @@ def _questao_pendente(usuario: Usuario, db: Session) -> Questao | None:
         .filter(Questao.usuario_id == usuario.id, Questao.respondida.is_(False))
         .order_by(Questao.id.desc())
         .first()
+    )
+
+
+def _resultado_repetido(db: Session, questao: Questao, resposta: int) -> ResultadoResposta:
+    anterior = db.get(RespostaQuestao, questao.id)
+    if not anterior or anterior.resposta != resposta:
+        raise HTTPException(status_code=409, detail="Essa questão já foi respondida")
+    desbloqueio = db.get(DesbloqueioQuestao, questao.id)
+    conquista = None
+    if desbloqueio:
+        conquista = (
+            db.query(Conquista)
+            .filter(
+                Conquista.usuario_id == questao.usuario_id,
+                Conquista.codigo == desbloqueio.conquista_codigo,
+            )
+            .first()
+        )
+    return ResultadoResposta(
+        correta=anterior.correta,
+        mensagem="Resposta correta!" if anterior.correta else "Resposta incorreta.",
+        conquista=ConquistaResposta(codigo=conquista.codigo, nome=conquista.nome) if conquista else None,
     )
 
 
@@ -118,13 +140,7 @@ def responder_questao(
         )
 
     if questao.respondida:
-        anterior = db.get(RespostaQuestao, questao.id)
-        if anterior and anterior.resposta == dados.resposta:
-            return ResultadoResposta(
-                correta=anterior.correta,
-                mensagem="Resposta correta!" if anterior.correta else "Resposta incorreta.",
-            )
-        raise HTTPException(status_code=409, detail="Essa questão já foi respondida")
+        return _resultado_repetido(db, questao, dados.resposta)
 
     acertou = dados.resposta == questao.resposta_certa
 
@@ -182,18 +198,14 @@ def responder_questao(
 
     questao.respondida = True
     db.add(RespostaQuestao(questao_id=questao.id, resposta=dados.resposta, correta=acertou))
+    if conquista_nova:
+        db.add(DesbloqueioQuestao(questao_id=questao.id, conquista_codigo=conquista_nova.codigo))
 
     try:
         db.commit()
     except IntegrityError:
         db.rollback()
-        anterior = db.get(RespostaQuestao, questao.id)
-        if anterior and anterior.resposta == dados.resposta:
-            return ResultadoResposta(
-                correta=anterior.correta,
-                mensagem="Resposta correta!" if anterior.correta else "Resposta incorreta.",
-            )
-        raise HTTPException(status_code=409, detail="Essa questão já foi respondida") from None
+        return _resultado_repetido(db, questao, dados.resposta)
 
     conquista_resposta = None
 

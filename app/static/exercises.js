@@ -17,6 +17,17 @@
   const main = document.querySelector('main');
   const keyboardIntro = document.getElementById('keyboard-intro');
   const keyboardIntroButton = document.getElementById('keyboard-intro-button');
+  const celebration = document.getElementById('achievement-celebration');
+  const celebrationArt = document.getElementById('celebration-art');
+  const celebrationName = document.getElementById('celebration-name');
+  const celebrationDescription = document.getElementById('celebration-description');
+  const celebrationContinue = document.getElementById('celebration-continue');
+  const achievementDetails = {
+    bronze: { label: 'Medalha de Bronze', art: 'award-bronze.svg', streak: 5 },
+    prata: { label: 'Medalha de Prata', art: 'award-silver.svg', streak: 10 },
+    ouro: { label: 'Medalha de Ouro', art: 'award-gold.svg', streak: 20 },
+    trofeu: { label: 'Troféu', art: 'award-trophy.svg', streak: 50 },
+  };
   const mode = new URLSearchParams(window.location.search).get('mode') === 'adventure' ? 'adventure' : 'free';
   let state = window.MathGame.read();
   if (mode === 'adventure' && (!state || state.mode !== 'adventure')) {
@@ -48,6 +59,26 @@
   let questionNumber = 0;
   let focusFirstChoiceAfterNotice = false;
   let mainWasInert = false;
+  let celebrationMainWasInert = false;
+
+  function showCelebration(achievement) {
+    const detail = achievementDetails[achievement?.codigo];
+    if (!detail || !celebration.hidden) return;
+    celebrationArt.src = `assets/${detail.art}`;
+    celebrationName.textContent = detail.label;
+    celebrationDescription.textContent = `Você desbloqueou ${achievement.nome} com ${detail.streak} acertos consecutivos!`;
+    celebrationMainWasInert = main.inert;
+    main.inert = true;
+    celebration.hidden = false;
+    celebrationContinue.focus({ preventScroll: true });
+  }
+
+  function closeCelebration() {
+    if (celebration.hidden) return;
+    celebration.hidden = true;
+    main.inert = celebrationMainWasInert;
+    nextButton.focus({ preventScroll: true });
+  }
 
   function showKeyboardIntro() {
     mainWasInert = main.inert;
@@ -250,6 +281,7 @@
         selected?.classList.add('is-wrong');
       }
       showAction(state.result ? 'Ver resultado' : 'Próximo desafio', state.result ? 'result' : 'next');
+      if (result.conquista) showCelebration(result.conquista);
     } catch (error) {
       feedback.className = 'feedback error';
       if (error.status === 409) {
@@ -291,7 +323,20 @@
   });
 
   keyboardIntroButton.addEventListener('click', closeKeyboardIntro);
+  celebrationContinue.addEventListener('click', closeCelebration);
   document.addEventListener('keydown', event => {
+    if (!celebration.hidden) {
+      if (event.key === 'Enter' || event.key === 'Escape') {
+        event.preventDefault();
+        closeCelebration();
+      } else if (event.key === 'Tab') {
+        event.preventDefault();
+        celebrationContinue.focus({ preventScroll: true });
+      } else if (/^[1-4]$/.test(event.key)) {
+        event.preventDefault();
+      }
+      return;
+    }
     if (!keyboardIntro.hidden) {
       if (event.key === 'Escape') {
         event.preventDefault();
