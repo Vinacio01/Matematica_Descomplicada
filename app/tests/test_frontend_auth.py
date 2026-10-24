@@ -261,3 +261,60 @@ def test_progress_across_sessions_and_users(server):
     assert json.loads(request(base, "/api/progresso", jar=other_jar)[1]) == expected
     with sqlite3.connect(work / "matematica.db") as db:
         assert db.execute("SELECT COUNT(*) FROM progressos WHERE usuario_id = (SELECT id FROM usuarios WHERE nome = ?)", ("EvolucaoB",)).fetchone()[0] == 0
+
+
+def test_achievements_are_persistent_and_replayable(server):
+    base, work = server
+    assert request(base, "/api/cadastro", {"nome": "MedalhasA", "senha": "senha123"})[0] == 201
+    jar = http.cookiejar.CookieJar()
+    assert request(base, "/api/login", {"nome": "MedalhasA", "senha": "senha123"}, jar)[0] == 200
+    csrf = json.loads(request(base, "/api/csrf", jar=jar)[1])["csrf_token"]
+    headers = {"X-CSRF-Token": csrf}
+    assert json.loads(request(base, "/api/conquistas", jar=jar)[1]) == []
+    assert json.loads(request(base, "/api/progresso", jar=jar)[1])["sequencia_atual"] == 0
+    milestones = {5: ("bronze", "Sequência de 5"), 10: ("prata", "Sequência de 10"),
+                  20: ("ouro", "Sequência de 20"), 50: ("trofeu", "Sequência de 50")}
+
+    for number in range(1, 51):
+        question = json.loads(request(base, "/api/questao", jar=jar, headers=headers, method="POST")[1])
+        first, operator, second = question["enunciado"].split()
+        a, b = int(first), int(second)
+        answer = {"+": lambda: a + b, "-": lambda: a - b, "×": lambda: a * b, "÷": lambda: a // b}[operator]()
+        payload = {"questao_id": question["id"], "resposta": answer}
+        status, body, _ = request(base, "/api/responder", payload, jar, headers)
+        assert status == 200
+        result = json.loads(body)
+        assert result["correta"] is True
+        expected = dict(zip(("codigo", "nome"), milestones[number])) if number in milestones else None
+        assert result["conquista"] == expected
+        if number in milestones:
+            repeated = json.loads(request(base, "/api/responder", payload, jar, headers)[1])
+            assert repeated["conquista"] == expected
+            unlocked = json.loads(request(base, "/api/conquistas", jar=jar)[1])
+            assert {item["codigo"] for item in unlocked} == {code for limit, (code, _) in milestones.items() if limit <= number}
+
+    progress = json.loads(request(base, "/api/progresso", jar=jar)[1])
+    assert progress == {"acertos": 50, "erros": 0, "sequencia_atual": 50, "recorde": 50}
+    with sqlite3.connect(work / "matematica.db") as db:
+        assert db.execute("SELECT COUNT(*) FROM conquistas WHERE usuario_id = (SELECT id FROM usuarios WHERE nome = ?)", ("MedalhasA",)).fetchone()[0] == 4
+        assert db.execute("SELECT COUNT(*) FROM desbloqueios_questao WHERE questao_id IN (SELECT id FROM questoes WHERE usuario_id = (SELECT id FROM usuarios WHERE nome = ?))", ("MedalhasA",)).fetchone()[0] == 4
+
+    question = json.loads(request(base, "/api/questao", jar=jar, headers=headers, method="POST")[1])
+    assert json.loads(request(base, "/api/responder", {"questao_id": question["id"], "resposta": -999}, jar, headers)[1])["conquista"] is None
+    assert json.loads(request(base, "/api/progresso", jar=jar)[1])["sequencia_atual"] == 0
+    assert len(json.loads(request(base, "/api/conquistas", jar=jar)[1])) == 4
+
+    for _ in range(5):
+        question = json.loads(request(base, "/api/questao", jar=jar, headers=headers, method="POST")[1])
+        first, operator, second = question["enunciado"].split()
+        a, b = int(first), int(second)
+        answer = {"+": lambda: a + b, "-": lambda: a - b, "×": lambda: a * b, "÷": lambda: a // b}[operator]()
+        assert json.loads(request(base, "/api/responder", {"questao_id": question["id"], "resposta": answer}, jar, headers)[1])["conquista"] is None
+
+    assert request(base, "/api/logout", {}, jar, headers)[0] == 204
+    assert request(base, "/api/login", {"nome": "MedalhasA", "senha": "senha123"}, jar)[0] == 200
+    assert len(json.loads(request(base, "/api/conquistas", jar=jar)[1])) == 4
+    assert request(base, "/api/cadastro", {"nome": "MedalhasB", "senha": "senha456"})[0] == 201
+    other = http.cookiejar.CookieJar()
+    assert request(base, "/api/login", {"nome": "MedalhasB", "senha": "senha456"}, other)[0] == 200
+    assert json.loads(request(base, "/api/conquistas", jar=other)[1]) == []

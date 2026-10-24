@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="welcome.css">
   <link rel="stylesheet" href="achievements.css">
   <script src="auth-session.js" defer></script>
-  <script src="achievements.js" defer></script>
+  <script src="achievements.js?v=20261024-1" defer></script>
 </head>
 <body>
 <main class="world achievements-world" aria-labelledby="achievements-title">
@@ -37,44 +37,45 @@
         <div class="journey-status">
           <div class="journey-copy">
             <span class="journey-icon" aria-hidden="true">★</span>
-            <div><strong id="unlocked-count">0 de 4 desbloqueadas</strong><span>Uma coleção para se orgulhar!</span></div>
+            <div><strong id="unlocked-count">Buscando suas conquistas...</strong><span>Uma coleção para se orgulhar!</span></div>
           </div>
           <div class="unlock-meter" role="progressbar" aria-label="Conquistas desbloqueadas" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0">
             <span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span>
           </div>
         </div>
 
-        <div class="achievement-grid" aria-label="Conquistas de demonstração">
+        <div class="achievement-grid" aria-label="Conquistas" aria-busy="true" inert>
           <article class="achievement-card bronze-card" data-achievement="bronze">
             <button class="award-select" type="button" aria-label="Selecionar medalha Bronze" aria-controls="award-detail" aria-pressed="false"></button>
             <div class="award-spotlight"><img class="award-art" src="assets/award-bronze.svg" alt="Medalha de bronze com estrela" width="150" height="150"></div>
             <h2>Bronze</h2>
-            <span class="award-state">Bloqueada</span>
+            <span class="award-state">Aguarde...</span>
           </article>
           <article class="achievement-card silver-card" data-achievement="silver">
             <button class="award-select" type="button" aria-label="Selecionar medalha Prata" aria-controls="award-detail" aria-pressed="false"></button>
             <div class="award-spotlight"><img class="award-art" src="assets/award-silver.svg" alt="Medalha de prata com cristal" width="150" height="150"></div>
             <h2>Prata</h2>
-            <span class="award-state">Bloqueada</span>
+            <span class="award-state">Aguarde...</span>
           </article>
           <article class="achievement-card gold-card" data-achievement="gold">
             <button class="award-select" type="button" aria-label="Selecionar medalha Ouro" aria-controls="award-detail" aria-pressed="false"></button>
             <div class="award-spotlight"><img class="award-art" src="assets/award-gold.svg" alt="Medalha de ouro com coroa" width="150" height="150"></div>
             <h2>Ouro</h2>
-            <span class="award-state">Bloqueada</span>
+            <span class="award-state">Aguarde...</span>
           </article>
           <article class="achievement-card trophy-card" data-achievement="trophy">
             <button class="award-select" type="button" aria-label="Selecionar Troféu" aria-controls="award-detail" aria-pressed="false"></button>
             <div class="award-spotlight"><img class="award-art" src="assets/award-trophy.svg" alt="Troféu dourado com estrela" width="150" height="150"></div>
             <h2>Troféu</h2>
-            <span class="award-state">Bloqueada</span>
+            <span class="award-state">Aguarde...</span>
           </article>
         </div>
 
         <div class="room-footer">
           <div class="award-detail" id="award-detail" role="status" aria-live="polite" aria-atomic="true">
-            <strong id="detail-title">Prata · Próxima meta</strong>
-            <span id="detail-description">10 acertos consecutivos. Continue jogando para ganhar a próxima medalha!</span>
+            <strong id="detail-title">Buscando suas medalhas...</strong>
+            <span id="detail-description">Logo vamos mostrar suas conquistas!</span>
+            <button class="achievements-retry" id="achievements-retry" type="button" hidden>Tentar novamente</button>
           </div>
           <div class="room-actions">
             <a class="start achievements-next" href="game-modes.html">Conquistar próxima medalha</a>
@@ -85,7 +86,7 @@
       <img class="mascot achievements-turquoise" src="assets/mascot-turquoise-achievements.svg" alt="Mascote turquesa orgulhoso segurando uma medalha." width="340" height="400">
       <img class="mascot achievements-coral" src="assets/mascot-coral-achievements.svg" alt="Mascote coral comemorando com confetes." width="320" height="370">
     </section>
-    <p class="achievements-demo">✦ Dados de demonstração: sequência de 7 acertos consecutivos. As conquistas não são salvas. ✦</p>
+    <p class="achievements-demo">✦ Suas medalhas ficam guardadas para a próxima aventura! ✦</p>
   </div>
 </main>
 </body>
