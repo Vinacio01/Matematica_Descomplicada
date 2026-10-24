@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="welcome.css">
   <link rel="stylesheet" href="progress.css">
   <script src="auth-session.js" defer></script>
-  <script src="progress.js" defer></script>
+  <script src="progress.js?v=20261024-1" defer></script>
 </head>
 <body>
 <main class="world progress-world" aria-labelledby="progress-title">
@@ -30,38 +30,39 @@
         <h1 id="progress-title">Minha evolução</h1>
         <p class="progress-subtitle">Acompanhe a evolução do pequeno matemático!</p>
 
-        <div class="progress-grid" aria-label="Indicadores de progresso de demonstração">
+        <div class="progress-grid" aria-label="Indicadores de progresso" aria-busy="true">
           <article class="progress-card correct-card">
             <span class="indicator-icon" aria-hidden="true">★</span>
-            <div class="indicator-copy"><h2>Acertos</h2><strong id="correct-count">0</strong></div>
+            <div class="indicator-copy"><h2>Acertos</h2><strong id="correct-count">—</strong></div>
           </article>
           <article class="progress-card mistakes-card">
             <span class="indicator-icon" aria-hidden="true">♡</span>
-            <div class="indicator-copy"><h2>Erros</h2><strong id="mistake-count">0</strong></div>
+            <div class="indicator-copy"><h2>Erros</h2><strong id="mistake-count">—</strong></div>
           </article>
           <article class="progress-card streak-card">
             <span class="indicator-icon" aria-hidden="true">⚡</span>
-            <div class="indicator-copy"><h2>Sequência atual</h2><strong id="streak-count">0</strong></div>
+            <div class="indicator-copy"><h2>Sequência atual</h2><strong id="streak-count">—</strong></div>
           </article>
           <article class="progress-card record-card">
             <span class="indicator-icon" aria-hidden="true">
               <svg viewBox="0 0 64 64" fill="none"><path d="M18 12h28v19c0 12-6 19-14 19S18 43 18 31V12Z" fill="currentColor"/><path d="M18 18H9v10c0 9 5 14 13 14m24-24h9v10c0 9-5 14-13 14M32 49v8m-13 0h26" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="m32 19 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6Z" fill="#FFB928"/></svg>
             </span>
-            <div class="indicator-copy"><h2>Recorde</h2><strong id="record-count">0</strong></div>
+            <div class="indicator-copy"><h2>Recorde</h2><strong id="record-count">—</strong></div>
           </article>
         </div>
 
         <div class="progress-summary">
-          <p><span>Questões respondidas</span><strong id="total-count">0</strong></p>
-          <p><span>Percentual de acertos</span><strong id="accuracy-count">0%</strong></p>
+          <p><span>Questões respondidas</span><strong id="total-count">—</strong></p>
+          <p><span>Percentual de acertos</span><strong id="accuracy-count">—</strong></p>
         </div>
-        <p class="encouragement">Cada desafio é um passo na sua aventura!</p>
+        <p class="encouragement" id="progress-message" role="status" aria-live="polite">Buscando suas conquistas...</p>
+        <button class="progress-retry" id="progress-retry" type="button" hidden>Tentar novamente</button>
         <a class="start progress-back" href="dashboard.html">← Voltar ao painel</a>
       </div>
       <img class="mascot progress-turquoise" src="assets/mascot-turquoise-progress.svg" alt="Mascote turquesa sorri e segura um troféu de conquista." width="340" height="400">
       <img class="mascot progress-coral" src="assets/mascot-coral-progress.svg" alt="Mascote coral segura uma estrela de conquista." width="320" height="370">
     </section>
-    <p class="progress-demo">✦ Dados de demonstração · o progresso ainda não é salvo ✦</p>
+    <p class="progress-demo">✦ Seu progresso acompanha você em cada aventura ✦</p>
   </div>
 </main>
 </body>
