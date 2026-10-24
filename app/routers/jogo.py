@@ -1,12 +1,15 @@
+import random
+from typing import Literal
+
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from typing import List
 
 from app.conquistas import obter_conquista_da_sequencia
 from app.database import get_db
 from app.dependencias import usuario_logado
 from app.jogo import gerar_conta, sortear_operacao
-from app.models import Conquista, Progresso, Questao, Usuario
+from app.models import Conquista, Progresso, Questao, RespostaQuestao, Usuario
 from app.schemas import (
     ConquistaResposta,
     ListaConquistaResposta,
@@ -19,11 +22,63 @@ from app.schemas import (
 router = APIRouter(prefix="/api", tags=["jogo"])
 
 
+def _alternativas(resposta: int) -> list[int]:
+    offsets = [-10, -5, -3, -2, -1, 1, 2, 3, 5, 10]
+    random.shuffle(offsets)
+    valores = {resposta}
+    for offset in offsets:
+        candidato = resposta + offset
+        if candidato >= 0:
+            valores.add(candidato)
+        if len(valores) == 4:
+            break
+    while len(valores) < 4:
+        valores.add(resposta + len(valores))
+    resultado = list(valores)
+    random.shuffle(resultado)
+    return resultado
+
+
+def _questao_resposta(questao: Questao, formato: str) -> QuestaoResposta:
+    return QuestaoResposta(
+        id=questao.id,
+        enunciado=questao.enunciado,
+        operacao=questao.operacao,
+        alternativas=_alternativas(questao.resposta_certa) if formato == "alternativas" else None,
+    )
+
+
+def _questao_pendente(usuario: Usuario, db: Session) -> Questao | None:
+    return (
+        db.query(Questao)
+        .filter(Questao.usuario_id == usuario.id, Questao.respondida.is_(False))
+        .order_by(Questao.id.desc())
+        .first()
+    )
+
+
 @router.get("/questao", response_model=QuestaoResposta)
 def obter_questao(
+    formato: Literal["digitada", "alternativas"] = "digitada",
     usuario: Usuario = Depends(usuario_logado),
     db: Session = Depends(get_db),
 ):
+    questao = _questao_pendente(usuario, db)
+    if questao is None:
+        raise HTTPException(status_code=404, detail="Nenhuma questão pendente")
+    return _questao_resposta(questao, formato)
+
+
+@router.post("/questao", response_model=QuestaoResposta)
+def criar_questao(
+    formato: Literal["digitada", "alternativas"] = "digitada",
+    usuario: Usuario = Depends(usuario_logado),
+    db: Session = Depends(get_db),
+):
+    pendente = _questao_pendente(usuario, db)
+    if pendente is not None:
+        return _questao_resposta(pendente, formato)
+
     operacao = sortear_operacao()
     conta = gerar_conta(operacao)
 
@@ -38,7 +93,7 @@ def obter_questao(
     db.commit()
     db.refresh(nova_questao)
 
-    return nova_questao
+    return _questao_resposta(nova_questao, formato)
 
 
 @router.post("/responder", response_model=ResultadoResposta)
@@ -63,10 +118,13 @@ def responder_questao(
         )
 
     if questao.respondida:
-        raise HTTPException(
-            status_code=404,
-            detail="Essa questão já foi respondida",
-        )
+        anterior = db.get(RespostaQuestao, questao.id)
+        if anterior and anterior.resposta == dados.resposta:
+            return ResultadoResposta(
+                correta=anterior.correta,
+                mensagem="Resposta correta!" if anterior.correta else "Resposta incorreta.",
+            )
+        raise HTTPException(status_code=409, detail="Essa questão já foi respondida")
 
     acertou = dados.resposta == questao.resposta_certa
 
@@ -123,8 +181,19 @@ def responder_questao(
         progresso.sequencia_atual = 0
 
     questao.respondida = True
+    db.add(RespostaQuestao(questao_id=questao.id, resposta=dados.resposta, correta=acertou))
 
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        anterior = db.get(RespostaQuestao, questao.id)
+        if anterior and anterior.resposta == dados.resposta:
+            return ResultadoResposta(
+                correta=anterior.correta,
+                mensagem="Resposta correta!" if anterior.correta else "Resposta incorreta.",
+            )
+        raise HTTPException(status_code=409, detail="Essa questão já foi respondida") from None
 
     conquista_resposta = None
 
@@ -160,17 +229,7 @@ def obter_progresso(
     )
 
     if not progresso:
-        progresso = Progresso(
-            usuario_id=usuario.id,
-            acertos=0,
-            erros=0,
-            sequencia_atual=0,
-            recorde=0,
-        )
-
-        db.add(progresso)
-        db.commit()
-        db.refresh(progresso)
+        return ProgressoResposta(acertos=0, erros=0, sequencia_atual=0, recorde=0)
 
     return ProgressoResposta(
         acertos=progresso.acertos,

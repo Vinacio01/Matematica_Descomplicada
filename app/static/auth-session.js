@@ -23,6 +23,27 @@ function checkSession() {
   });
 }
 
+window.authenticatedPost = async (url, body) => {
+  const csrfResponse = await fetch('/api/csrf', { credentials: 'same-origin', cache: 'no-store' });
+  if (csrfResponse.status === 401) {
+    window.location.replace('access.html');
+    throw new Error('session expired');
+  }
+  if (!csrfResponse.ok) throw new Error('session unavailable');
+  const { csrf_token: csrfToken } = await csrfResponse.json();
+  const response = await fetch(url, {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+      'X-CSRF-Token': csrfToken,
+      ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+    },
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+  });
+  if (response.status === 401) window.location.replace('access.html');
+  return response;
+};
+
 checkSession();
 window.addEventListener('pageshow', event => {
   if (event.persisted) checkSession();

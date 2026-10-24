@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>Teste das estrelas do Modo Aventura</title>
+<h1>Teste das estrelas do Modo Aventura</h1>
+<p id="status">Executando…</p>
+<pre id="details"></pre>
+<div id="result-stars"></div>
+<span id="result-correct"></span>
+<span id="result-errors"></span>
+<span id="result-message"></span>
+<button id="replay-button" type="button">Jogar novamente</button>
+<script src="../static/game-state.js"></script>
+<script>
+  (async () => {
+    const cases = [[0, 1], [4, 1], [5, 2], [6, 2], [8, 2], [9, 3], [10, 3]];
+    const details = [];
+    try {
+      for (const [correct, expectedStars] of cases) {
+        window.MathGame.start('adventure');
+        for (let number = 1; number <= 10; number++) {
+          const question = { id: number, enunciado: '1 + 1', alternativas: null };
+          if (!window.MathGame.setPending(question, 2)) throw new Error('Resposta pendente não registrada');
+          if (!window.MathGame.record(number <= correct, number, number)) throw new Error('Resposta não contabilizada');
+        }
+        const state = window.MathGame.read();
+        if (!state || state.answered !== 10 || state.correct !== correct ||
+            state.errors !== 10 - correct || state.correct + state.errors !== 10 ||
+            state.result.correct !== correct || state.result.errors !== 10 - correct ||
+            state.result.stars !== expectedStars || window.MathGame.starsFor(correct) !== expectedStars) {
+          throw new Error(`Resultado incorreto para ${correct} acertos: ${JSON.stringify(state)}`);
+        }
+
+        document.getElementById('result-stars').replaceChildren();
+        const script = document.createElement('script');
+        script.src = `../static/game-result.js?correct=${correct}`;
+        await new Promise((resolve, reject) => {
+          script.onload = resolve;
+          script.onerror = () => reject(new Error('Não foi possível carregar a tela de resultado'));
+          document.body.append(script);
+        });
+        const displayedStars = document.querySelectorAll('#result-stars .earned').length;
+        if (Number(document.getElementById('result-correct').textContent) !== correct ||
+            Number(document.getElementById('result-errors').textContent) !== 10 - correct ||
+            displayedStars !== expectedStars ||
+            document.getElementById('result-stars').getAttribute('aria-label') !== `${expectedStars} de 3 estrelas conquistadas`) {
+          throw new Error(`Tela incorreta para ${correct} acertos`);
+        }
+        details.push(`${correct} acertos + ${10 - correct} erros = 10 questões → ${displayedStars} estrela(s)`);
+      }
+      sessionStorage.setItem('matematica-descomplicada-partida', JSON.stringify({
+        mode: 'adventure', answered: 10, correct: 6, errors: 4,
+        result: { correct: 6, errors: 4, stars: 1 }, pending: null
+      }));
+      const previousResult = window.MathGame.read();
+      if (!previousResult || previousResult.result.stars !== 2 ||
+          previousResult.correct !== 6 || previousResult.errors !== 4) {
+        throw new Error('Partida concluída anteriormente não foi reclassificada');
+      }
+      document.getElementById('result-stars').replaceChildren();
+      const previousScript = document.createElement('script');
+      previousScript.src = '../static/game-result.js?previous=6';
+      await new Promise((resolve, reject) => {
+        previousScript.onload = resolve;
+        previousScript.onerror = () => reject(new Error('Não foi possível carregar o resultado anterior'));
+        document.body.append(previousScript);
+      });
+      if (document.querySelectorAll('#result-stars .earned').length !== 2 ||
+          document.getElementById('result-correct').textContent !== '6' ||
+          document.getElementById('result-errors').textContent !== '4') {
+        throw new Error('Tela da partida anterior não foi reclassificada');
+      }
+      details.push('Partida já salva: 6 acertos + 4 erros → 2 estrelas');
+      document.getElementById('status').textContent = `${cases.length} cenários passaram`;
+    } catch (error) {
+      document.getElementById('status').textContent = `Falha: ${error.message}`;
+      throw error;
+    } finally {
+      document.getElementById('details').textContent = details.join('\n');
+      sessionStorage.removeItem('matematica-descomplicada-partida');
+    }
+  })();
+</script>
+</html>

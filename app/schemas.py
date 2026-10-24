@@ -31,6 +31,7 @@ class QuestaoResposta(BaseModel):
     id: int
     enunciado: str
     operacao: str
+    alternativas: list[int] | None = None
 
     model_config = {"from_attributes": True}
 

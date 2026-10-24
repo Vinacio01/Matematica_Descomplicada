@@ -9,7 +9,7 @@ from app.database import get_db
 from app.dependencias import usuario_logado
 from app.models import SessaoLogin, Usuario
 from app.schemas import UsuarioCadastro, UsuarioLogin, UsuarioResposta
-from app.seguranca import gerar_hash, verificar_senha
+from app.seguranca import gerar_hash, gerar_token_csrf, verificar_senha
 
 router = APIRouter(prefix="/api", tags=["auth"])
 
@@ -59,6 +59,17 @@ def login(dados: UsuarioLogin, response: Response, db: Session = Depends(get_db)
 @router.get("/eu", response_model=UsuarioResposta)
 def eu(usuario: Usuario = Depends(usuario_logado)):
     return usuario
+
+
+@router.get("/csrf")
+def csrf(
+    response: Response,
+    token: str | None = Cookie(default=None),
+    usuario: Usuario = Depends(usuario_logado),
+):
+    assert token is not None
+    response.headers["Cache-Control"] = "no-store"
+    return {"csrf_token": gerar_token_csrf(token)}
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
 def logout(

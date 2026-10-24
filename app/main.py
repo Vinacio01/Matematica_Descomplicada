@@ -1,4 +1,5 @@
 from pathlib import Path
+import hmac
 
 from fastapi import Cookie, Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
@@ -9,6 +10,7 @@ from app import models
 from app.database import Base, engine, get_db
 from app.dependencias import usuario_logado
 from app.routers import auth, jogo
+from app.seguranca import gerar_token_csrf
 
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
@@ -36,6 +38,11 @@ async def verificar_origem(request: Request, call_next):
         expected = str(request.base_url).rstrip("/")
         if (origin and origin != expected) or (not origin and referer and not referer.startswith(expected + "/")):
             return JSONResponse({"detail": "Origem não permitida"}, status_code=403)
+        if request.url.path not in {"/api/cadastro", "/api/login"}:
+            enviado = request.headers.get("x-csrf-token", "")
+            esperado = gerar_token_csrf(request.cookies["token"])
+            if not hmac.compare_digest(enviado, esperado):
+                return JSONResponse({"detail": "Proteção de sessão inválida"}, status_code=403)
     return await call_next(request)
 
 

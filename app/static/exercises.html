@@ -7,10 +7,10 @@
   <title>Desafios — Matemática Descomplicada</title>
   <link rel="stylesheet" href="design-system.css">
   <link rel="stylesheet" href="welcome.css">
-  <link rel="stylesheet" href="exercises.css">
+  <link rel="stylesheet" href="exercises.css?v=20261024-3">
   <script src="auth-session.js" defer></script>
-  <script src="game-state.js" defer></script>
-  <script src="exercises.js" defer></script>
+  <script src="game-state.js?v=20261024-3" defer></script>
+  <script src="exercises.js?v=20261024-4" defer></script>
 </head>
 <body>
 <main class="world exercises-world" aria-labelledby="exercise-title">
@@ -65,8 +65,15 @@
       <img class="mascot exercise-turquoise" id="mascot-turquoise" alt="" width="340" height="400">
       <img class="mascot exercise-coral" id="mascot-coral" alt="" width="320" height="370">
     </section>
-    <p class="demo-note">✦ Questões de demonstração · partida temporária nesta aba ✦</p>
+    <p class="demo-note">✦ Questões reais · partida temporária nesta aba ✦</p>
   </div>
 </main>
+<div class="keyboard-intro" id="keyboard-intro" hidden>
+  <div class="keyboard-intro-panel" role="dialog" aria-modal="true" aria-labelledby="keyboard-intro-title" aria-describedby="keyboard-intro-description">
+    <h2 id="keyboard-intro-title">🎮 Você também pode jogar usando o teclado!</h2>
+    <p id="keyboard-intro-description">Nas perguntas de múltipla escolha, pressione 1, 2, 3 ou 4 para escolher sua resposta. Nas perguntas digitadas, basta escrever o resultado e apertar Enter!</p>
+    <button class="start keyboard-intro-button" id="keyboard-intro-button" type="button">Entendi! Vamos jogar!</button>
+  </div>
+</div>
 </body>
 </html>
