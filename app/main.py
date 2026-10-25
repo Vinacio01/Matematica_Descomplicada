@@ -1,5 +1,6 @@
 from pathlib import Path
 import hmac
+import os
 
 from fastapi import Cookie, Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
@@ -35,15 +36,20 @@ async def verificar_origem(request: Request, call_next):
     if request.method not in {"GET", "HEAD", "OPTIONS"} and request.cookies.get("token"):
         origin = request.headers.get("origin")
         referer = request.headers.get("referer")
-        expected = str(request.base_url).rstrip("/")
+        expected = os.getenv("APP_PUBLIC_ORIGIN", str(request.base_url)).rstrip("/")
         if (origin and origin != expected) or (not origin and referer and not referer.startswith(expected + "/")):
-            return JSONResponse({"detail": "Origem não permitida"}, status_code=403)
+            return JSONResponse({"detail": "Origem não permitida"}, status_code=403,
+                                headers={"Cache-Control": "no-store"})
         if request.url.path not in {"/api/cadastro", "/api/login"}:
             enviado = request.headers.get("x-csrf-token", "")
             esperado = gerar_token_csrf(request.cookies["token"])
             if not hmac.compare_digest(enviado, esperado):
-                return JSONResponse({"detail": "Proteção de sessão inválida"}, status_code=403)
-    return await call_next(request)
+                return JSONResponse({"detail": "Proteção de sessão inválida"}, status_code=403,
+                                    headers={"Cache-Control": "no-store"})
+    response = await call_next(request)
+    if request.url.path.startswith("/api/"):
+        response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 def protected_page(filename: str):

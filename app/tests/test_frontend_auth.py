@@ -11,6 +11,8 @@ import time
 import urllib.error
 import urllib.request
 import json
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 
 import bcrypt
 import pytest
@@ -26,7 +28,10 @@ def server(tmp_path_factory):
         sock.bind(("127.0.0.1", 0))
         port = sock.getsockname()[1]
     env = os.environ.copy()
+    env.pop("APP_PUBLIC_ORIGIN", None)
+    env.pop("APP_COOKIE_SECURE", None)
     env["PYTHONPATH"] = str(ROOT)
+    env["APP_DATABASE_PATH"] = str(work / "matematica.db")
     process = subprocess.Popen(
         [sys.executable, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", str(port)],
         cwd=work, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
@@ -79,6 +84,8 @@ def test_frontend_and_authentication(server):
     ]:
         status, body, _ = request(base, path)
         assert status == 200 and expected in body
+    for path in ("/matematica.db", "/.git/config", "/app/database.py"):
+        assert request(base, path)[0] == 404
 
     protected = ["dashboard", "game-modes", "exercises", "progress", "achievements", "game-result"]
     for page in protected:
@@ -102,6 +109,7 @@ def test_frontend_and_authentication(server):
     jar = http.cookiejar.CookieJar()
     status, body, headers = request(base, "/api/login", {"nome": "AlunoTeste", "senha": "123456"}, jar)
     assert status == 200 and json.loads(body)["nome"] == "AlunoTeste"
+    assert headers["Cache-Control"] == "no-store"
     assert "httponly" in headers["Set-Cookie"].lower()
     assert "samesite=lax" in headers["Set-Cookie"].lower()
     old_token = next(cookie.value for cookie in jar if cookie.name == "token")
@@ -119,7 +127,9 @@ def test_frontend_and_authentication(server):
     assert status == 200
     csrf = json.loads(body)["csrf_token"]
     csrf_header = {"X-CSRF-Token": csrf}
-    assert request(base, "/api/questao", jar=jar, method="POST")[0] == 403
+    status, _, headers = request(base, "/api/questao", jar=jar, method="POST")
+    assert status == 403
+    assert headers["Cache-Control"] == "no-store"
     status, body, _ = request(base, "/api/questao?formato=alternativas", jar=jar, headers=csrf_header, method="POST")
     assert status == 200
     question_id = json.loads(body)["id"]
@@ -152,7 +162,8 @@ def test_frontend_and_authentication(server):
     other_csrf = json.loads(request(base, "/api/csrf", jar=other_jar)[1])["csrf_token"]
     assert request(base, "/api/responder", {"questao_id": typed_question["id"], "resposta": answer}, other_jar, {"X-CSRF-Token": other_csrf})[0] == 404
 
-    assert request(base, "/api/logout", {}, jar, {"Origin": "https://wrong.example"})[0] == 403
+    status, _, headers = request(base, "/api/logout", {}, jar, {"Origin": "https://wrong.example"})
+    assert status == 403 and headers["Cache-Control"] == "no-store"
     assert request(base, "/api/eu", jar=jar)[0] == 200
     assert request(base, "/api/logout", {}, jar)[0] == 403
     assert request(base, "/api/logout", {}, jar, csrf_header)[0] == 204
@@ -318,3 +329,135 @@ def test_achievements_are_persistent_and_replayable(server):
     other = http.cookiejar.CookieJar()
     assert request(base, "/api/login", {"nome": "MedalhasB", "senha": "senha456"}, other)[0] == 200
     assert json.loads(request(base, "/api/conquistas", jar=other)[1]) == []
+
+
+def test_concurrent_answers_preserve_progress(server):
+    base, work = server
+    assert request(base, "/api/cadastro", {"nome": "Concorrencia", "senha": "senha123"})[0] == 201
+    jar = http.cookiejar.CookieJar()
+    assert request(base, "/api/login", {"nome": "Concorrencia", "senha": "senha123"}, jar)[0] == 200
+    token = next(cookie.value for cookie in jar if cookie.name == "token")
+    csrf = json.loads(request(base, "/api/csrf", jar=jar)[1])["csrf_token"]
+    with sqlite3.connect(work / "matematica.db") as db:
+        user_id = db.execute("SELECT id FROM usuarios WHERE nome = ?", ("Concorrencia",)).fetchone()[0]
+        question_ids = []
+        for _ in range(8):
+            cursor = db.execute(
+                "INSERT INTO questoes (usuario_id, enunciado, operacao, resposta_certa, respondida) VALUES (?, ?, ?, ?, ?)",
+                (user_id, "1 + 1", "+", 2, 0),
+            )
+            question_ids.append(cursor.lastrowid)
+
+    def answer(question_id):
+        return request(base, "/api/responder", {"questao_id": question_id, "resposta": 2},
+                       headers={"Cookie": f"token={token}", "X-CSRF-Token": csrf})[0]
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        assert list(pool.map(answer, question_ids)) == [200] * 8
+    progress = json.loads(request(base, "/api/progresso", jar=jar)[1])
+    assert (progress["acertos"], progress["sequencia_atual"], progress["recorde"]) == (8, 8, 8)
+
+    def create_question(_):
+        status, body, _ = request(base, "/api/questao", method="POST",
+                                  headers={"Cookie": f"token={token}", "X-CSRF-Token": csrf})
+        return status, json.loads(body)["id"]
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        created = list(pool.map(create_question, range(8)))
+    assert {status for status, _ in created} == {200}
+    assert len({question_id for _, question_id in created}) == 1
+
+    # Simultaneous retries must count the same question only once.
+    with sqlite3.connect(work / "matematica.db") as db:
+        correct = db.execute("SELECT resposta_certa FROM questoes WHERE id = ?", (created[0][1],)).fetchone()[0]
+
+    def retry_answer(_):
+        return request(base, "/api/responder", {"questao_id": created[0][1], "resposta": correct},
+                       headers={"Cookie": f"token={token}", "X-CSRF-Token": csrf})[:2]
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        repeated = list(pool.map(retry_answer, range(8)))
+    assert {status for status, _ in repeated} == {200}
+    assert all(json.loads(body)["correta"] for _, body in repeated)
+    progress = json.loads(request(base, "/api/progresso", jar=jar)[1])
+    assert progress == {"acertos": 9, "erros": 0, "sequencia_atual": 9, "recorde": 9}
+    assert request(base, "/api/responder", {"questao_id": created[0][1], "resposta": correct + 1},
+                   headers={"Cookie": f"token={token}", "X-CSRF-Token": csrf})[0] == 409
+
+
+def test_absolute_database_path_and_https_origin(tmp_path):
+    database = tmp_path / "data" / "matematica.db"
+    database.parent.mkdir()
+    public_origin = "https://aluno.pythonanywhere.com"
+
+    # Import only the configuration: never connect to the existing project database.
+    config_env = os.environ.copy()
+    config_env["PYTHONPATH"] = str(ROOT)
+    config_env.pop("APP_DATABASE_PATH", None)
+    default_path = subprocess.run(
+        [sys.executable, "-c", "from app.database import DATABASE_PATH; print(DATABASE_PATH)"],
+        cwd=tmp_path, env=config_env, capture_output=True, text=True, check=True,
+    )
+    assert Path(default_path.stdout.strip()) == ROOT / "matematica.db"
+    config_env["APP_DATABASE_PATH"] = "relative.db"
+    invalid_path = subprocess.run(
+        [sys.executable, "-c", "import app.database"],
+        cwd=tmp_path, env=config_env, capture_output=True, text=True,
+    )
+    assert invalid_path.returncode != 0 and "APP_DATABASE_PATH" in invalid_path.stderr
+    assert not (tmp_path / "relative.db").exists()
+
+    @contextmanager
+    def launch(cwd):
+        cwd.mkdir()
+        with socket.socket() as sock:
+            sock.bind(("127.0.0.1", 0))
+            port = sock.getsockname()[1]
+        env = os.environ.copy()
+        env.update(PYTHONPATH=str(ROOT), APP_DATABASE_PATH=str(database),
+                   APP_PUBLIC_ORIGIN=public_origin)
+        process = subprocess.Popen(
+            [sys.executable, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", str(port)],
+            cwd=cwd, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
+        )
+        base = f"http://127.0.0.1:{port}"
+        for _ in range(100):
+            if process.poll() is not None:
+                raise AssertionError(process.stderr.read().decode())
+            try:
+                urllib.request.urlopen(base + "/", timeout=0.2).close()
+                break
+            except urllib.error.URLError:
+                time.sleep(0.05)
+        else:
+            process.terminate()
+            raise AssertionError("FastAPI did not start")
+        try:
+            yield base
+        finally:
+            process.terminate()
+            process.wait(timeout=5)
+
+    with launch(tmp_path / "first") as base:
+        assert request(base, "/api/cadastro", {"nome": "Persistente", "senha": "senha123"})[0] == 201
+        status, _, headers = request(base, "/api/login", {"nome": "Persistente", "senha": "senha123"})
+        assert status == 200 and "secure" in headers["Set-Cookie"].lower()
+        token = headers["Set-Cookie"].split("token=", 1)[1].split(";", 1)[0]
+        auth = {"Cookie": f"token={token}"}
+        csrf = json.loads(request(base, "/api/csrf", headers=auth)[1])["csrf_token"]
+        assert request(base, "/api/questao", method="POST", headers={**auth, "X-CSRF-Token": csrf,
+                       "Origin": "http://127.0.0.1"})[0] == 403
+        assert request(base, "/api/questao", method="POST", headers={**auth, "X-CSRF-Token": csrf,
+                       "Origin": public_origin})[0] == 200
+        assert request(base, "/api/questao", method="POST", headers={**auth, "X-CSRF-Token": csrf,
+                       "Referer": public_origin + "/exercises.html"})[0] == 200
+        assert request(base, "/api/questao", method="POST", headers={**auth, "X-CSRF-Token": csrf,
+                       "Referer": public_origin + ".evil.example/exercises.html"})[0] == 403
+
+    with launch(tmp_path / "second") as base:
+        status, body, _ = request(base, "/api/login", {"nome": "Persistente", "senha": "senha123"})
+        assert status == 200 and json.loads(body)["nome"] == "Persistente"
+        assert request(base, "/matematica.db")[0] == 404
+    assert database.is_file()
+    assert not (tmp_path / "first" / "matematica.db").exists()
+    assert not (tmp_path / "second" / "matematica.db").exists()
