@@ -50,7 +50,8 @@ def login(dados: UsuarioLogin, response: Response, db: Session = Depends(get_db)
         value=token,
         httponly=True,
         samesite="lax",
-        secure=os.getenv("APP_COOKIE_SECURE", "0") == "1",
+        secure=(os.getenv("APP_COOKIE_SECURE") == "1" or
+                os.getenv("APP_PUBLIC_ORIGIN", "").startswith("https://")),
         max_age=60 * 60 * 24 * 7,
     )
     return usuario

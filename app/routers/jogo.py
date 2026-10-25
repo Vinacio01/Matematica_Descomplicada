@@ -97,6 +97,7 @@ def criar_questao(
     usuario: Usuario = Depends(usuario_logado),
     db: Session = Depends(get_db),
 ):
+    db.connection().exec_driver_sql("BEGIN IMMEDIATE")
     pendente = _questao_pendente(usuario, db)
     if pendente is not None:
         return _questao_resposta(pendente, formato)
@@ -124,6 +125,7 @@ def responder_questao(
     usuario: Usuario = Depends(usuario_logado),
     db: Session = Depends(get_db),
 ):
+    db.connection().exec_driver_sql("BEGIN IMMEDIATE")
     questao = (
         db.query(Questao)
         .filter(
