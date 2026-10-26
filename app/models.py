@@ -40,6 +40,14 @@ class SessaoLogin(Base):
     )
 
 
+class LimiteLogin(Base):
+    __tablename__ = "limites_login"
+
+    conta_hash = Column(String, primary_key=True)
+    falhas = Column(Integer, nullable=False)
+    expira_em = Column(DateTime, nullable=False)
+
+
 class Questao(Base):
     __tablename__ = "questoes"
 
