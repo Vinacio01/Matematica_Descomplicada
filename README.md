@@ -19,6 +19,7 @@ A plataforma permite que os alunos pratiquem operações matemáticas, acompanhe
 - Proteção de páginas internas.
 - Controle de expiração das sessões.
 - Proteção CSRF nas operações autenticadas.
+- Limite temporário de tentativas de login, registrado no SQLite.
 
 Cada aluno possui sua própria conta, com progresso e conquistas individuais.
 
@@ -164,9 +165,12 @@ Matematica_Descomplicada/
 │   │
 │   └── tests/
 │       ├── test_jogo.py
-│       └── test_frontend_auth.py
+│       ├── test_frontend_auth.py
+│       └── test_backup_sqlite.py
 │
 ├── requirements.txt
+├── scripts/backup_sqlite.py
+├── IMPLANTACAO.md
 ├── .gitignore
 └── README.md
 ```
@@ -269,7 +273,7 @@ O projeto utiliza SQLite e SQLAlchemy para armazenar:
 
 O banco é criado automaticamente conforme a configuração da aplicação.
 
-Os arquivos locais de banco de dados não devem ser enviados ao GitHub.
+Os arquivos locais de banco de dados e os backups não devem ser enviados ao GitHub. Na hospedagem, o banco fica fora do repositório; veja [o guia de implantação](./IMPLANTACAO.md).
 
 ## 🧪 Testes
 
@@ -282,6 +286,8 @@ O projeto possui testes automatizados para verificar os principais fluxos da apl
 - Persistência do progresso.
 - Desbloqueio das conquistas.
 - Recuperação após falhas de comunicação.
+- Bloqueio temporário do login e recuperação do acesso.
+- Backup e restauração em bancos fictícios.
 
 Para executar:
 
@@ -295,7 +301,7 @@ Caso exista um problema local relacionado ao cache do pytest:
 python -m pytest app/tests -q -p no:cacheprovider
 ```
 
-A última integração funcional validada contou com **12 testes Python aprovados**. A auditoria adicional de produção está em andamento, portanto seus resultados ainda não estão consolidados.
+Os testes criam bancos temporários e contas fictícias; nunca aponte `APP_DATABASE_PATH` para o banco público ao executá-los. O número de testes aprovados deve ser conferido na execução mais recente da suíte.
 
 ## 🎨 Interface e experiência do usuário
 
@@ -319,26 +325,20 @@ A aplicação utiliza mecanismos como hashes de senha, cookies HttpOnly, sessõe
 
 Como a plataforma é destinada a crianças, a privacidade e a proteção das informações dos alunos são prioridades.
 
-Antes da publicação definitiva, o projeto passará por uma revisão de configuração de produção, persistência, segurança e compatibilidade com a hospedagem.
+Após cinco senhas incorretas para o mesmo nome em 15 minutos, o login responde com bloqueio temporário. Nomes inexistentes seguem a mesma regra e recebem mensagens equivalentes. O controle persiste no SQLite e expira automaticamente. Um ataque direcionado ainda pode causar bloqueios temporários repetidos; acompanhe os logs sem registrar senhas ou cookies. Para o cadastro público, mantenha o compartilhamento limitado e monitore crescimento de contas e uso de disco antes de introduzir medidas adicionais.
 
 ## 🌐 Hospedagem e disponibilidade
 
-A aplicação está funcional em ambiente local.
+A aplicação está publicada em [cadini.pythonanywhere.com](https://cadini.pythonanywhere.com/) no plano gratuito do PythonAnywhere, com FastAPI/ASGI e SQLite. O procedimento de atualização, configuração, logs, backup e restauração está no [guia de implantação](./IMPLANTACAO.md).
 
-A publicação pública está planejada para uma solução de hospedagem gratuita, inicialmente considerando o **PythonAnywhere**.
-
-A compatibilidade da implantação FastAPI/ASGI com os recursos disponíveis na conta gratuita ainda precisa ser validada.
-
-**Status atual:** desenvolvimento funcional concluído; auditoria e preparação para publicação em andamento.
+**Status atual:** plataforma em uso restrito por colegas; alterações locais deste ciclo ainda exigem revisão e publicação manual.
 
 ## 📌 Próximos passos
 
-- Concluir a auditoria de segurança e estabilidade.
-- Validar concorrência e persistência do SQLite.
-- Finalizar a configuração de produção.
-- Confirmar a compatibilidade da hospedagem gratuita.
-- Publicar a plataforma.
-- Realizar testes de acesso público com múltiplos usuários.
+- Revisar e executar a suíte após cada alteração.
+- Criar e baixar backups manuais regularmente; testar restauração em banco separado.
+- Acompanhar logs, espaço em disco e disponibilidade do plano gratuito.
+- Publicar alterações futuras manualmente após revisão e backup.
 
 ## 🎓 Sobre o projeto
 

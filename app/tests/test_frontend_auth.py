@@ -1,6 +1,7 @@
 """HTTP smoke test of the served interface and cookie authentication."""
 
 import http.cookiejar
+import hashlib
 import os
 from pathlib import Path
 import socket
@@ -461,3 +462,49 @@ def test_absolute_database_path_and_https_origin(tmp_path):
     assert database.is_file()
     assert not (tmp_path / "first" / "matematica.db").exists()
     assert not (tmp_path / "second" / "matematica.db").exists()
+
+
+def test_login_temporary_limit_and_recovery(server):
+    base, work = server
+    nome = "LimiteTeste"
+    assert request(base, "/api/cadastro", {"nome": nome, "senha": "senha123"})[0] == 201
+    for tentativa in range(5):
+        status, body, _ = request(base, "/api/login", {"nome": nome, "senha": "incorreta"})
+        assert status == (429 if tentativa == 4 else 401)
+        if tentativa == 4:
+            mensagem_bloqueio = body
+    status, body, headers = request(base, "/api/login", {"nome": nome, "senha": "senha123"})
+    assert status == 429 and body == mensagem_bloqueio
+    assert int(headers["Retry-After"]) > 0
+
+    # Nomes inexistentes recebem exatamente as mesmas respostas.
+    for tentativa in range(5):
+        status, body, _ = request(base, "/api/login", {"nome": "ContaFicticia", "senha": "incorreta"})
+        assert status == (429 if tentativa == 4 else 401)
+        if tentativa == 4:
+            assert body == mensagem_bloqueio
+
+    with sqlite3.connect(work / "matematica.db") as db:
+        chave = hashlib.sha256(nome.encode()).hexdigest()
+        assert db.execute("SELECT falhas FROM limites_login WHERE conta_hash = ?", (chave,)).fetchone()[0] == 5
+        db.execute("UPDATE limites_login SET expira_em = ? WHERE conta_hash = ?", ("2000-01-01 00:00:00", chave))
+
+    assert request(base, "/api/login", {"nome": nome, "senha": "senha123"})[0] == 200
+    assert request(base, "/api/login", {"nome": nome, "senha": "incorreta"})[0] == 401
+
+
+def test_simultaneous_login_failures_share_sqlite_limit(server):
+    base, work = server
+    nome = "LimiteConcorrente"
+    assert request(base, "/api/cadastro", {"nome": nome, "senha": "senha123"})[0] == 201
+
+    def falhar(_):
+        return request(base, "/api/login", {"nome": nome, "senha": "incorreta"})[0]
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        respostas = list(pool.map(falhar, range(8)))
+    assert respostas.count(401) == 4
+    assert respostas.count(429) == 4
+    with sqlite3.connect(work / "matematica.db") as db:
+        chave = hashlib.sha256(nome.encode()).hexdigest()
+        assert db.execute("SELECT falhas FROM limites_login WHERE conta_hash = ?", (chave,)).fetchone()[0] == 5
